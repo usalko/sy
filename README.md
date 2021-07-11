@@ -6,8 +6,7 @@ Share your mood with anyone
 
 |Folder|Implementation language
 |------|-----------------------
-|java-spring-maven|Java language (Java 8 SE)
-|python-django|Python language (Python 3.7)
+|backend-java-spring-maven|Java language (Java 8 SE)
 
 # The idea pretty simple
 You write your mood in geometry shapes.
