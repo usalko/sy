@@ -77,6 +77,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           child: TriangleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
+            editMode: true,
           ),
         ),
       ];
@@ -87,6 +88,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           child: SquareWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
+            editMode: true,
           ),
         ),
       ];
@@ -97,6 +99,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           child: CircleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
+            editMode: true,
           ),
         ),
       ];

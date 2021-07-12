@@ -7,8 +7,9 @@ class CirclePainter extends CustomPainter {
 
   Size cardSize;
   Color color;
+  bool editMode;
 
-  CirclePainter({required this.cardSize, required this.color});
+  CirclePainter({required this.cardSize, required this.color, required this.editMode});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -22,6 +23,19 @@ class CirclePainter extends CustomPainter {
     var centerY = this.cardSize.height / 2;
     canvas.drawCircle(Offset(centerX, centerY), min(centerX, centerY), paint1);
 
+    // Draw zones
+    if (editMode) {
+      canvas.drawCircle(Offset(centerX, centerY), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(centerX / 2, centerY / 2), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(centerX / 2, centerY * 3 / 2), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(centerX * 3 / 2, centerY * 3 / 2), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(centerX * 3 / 2, centerY / 2), min(centerX, centerY) / 4, paint1);
+
+      canvas.drawCircle(Offset(centerX, centerY * 3 / 2), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(centerX, centerY / 2), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(centerX * 3 / 2, centerY), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(centerX / 2, centerY), min(centerX, centerY) / 4, paint1);
+    }
   }
 
   @override
@@ -32,8 +46,9 @@ class CircleWidget extends StatelessWidget {
 
   double width;
   Color color;
+  bool editMode;
 
-  CircleWidget({required this.width, required this.color});
+  CircleWidget({required this.width, required this.color, this.editMode: false});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +56,7 @@ class CircleWidget extends StatelessWidget {
       height: this.width,
       width: this.width,
       child: CustomPaint(
-        painter: CirclePainter(cardSize: Size.square(this.width), color: color),
+        painter: CirclePainter(cardSize: Size.square(this.width), color: color, editMode: editMode),
       ),
     );
   }

@@ -5,8 +5,9 @@ import 'package:flutter/cupertino.dart';
 class TrianglePainter extends CustomPainter {
   Size cardSize;
   Color color;
+  bool editMode;
 
-  TrianglePainter({required this.cardSize, required this.color});
+  TrianglePainter({required this.cardSize, required this.color, required this.editMode});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -22,6 +23,18 @@ class TrianglePainter extends CustomPainter {
     path.lineTo(size.height, size.width);
     path.close();
     canvas.drawPath(path, paint1);
+
+    // Draw zones
+    if (editMode) {
+      var line1Offset = size.width / 3;
+      canvas.drawLine(Offset(line1Offset, size.height / 3), Offset(size.width - line1Offset, size.height / 3), paint1);
+      var line2Offset = size.width / 6;
+      canvas.drawLine(Offset(line2Offset, size.height * 2 / 3), Offset(size.width - line2Offset, size.height * 2 / 3), paint1);
+      canvas.drawLine(Offset(line1Offset, size.height / 3), Offset(size.width * 2 / 3, size.height), paint1);
+      canvas.drawLine(Offset(size.width - line1Offset, size.height / 3), Offset(size.width / 3, size.height), paint1);
+      canvas.drawLine(Offset(line2Offset, size.height * 2 / 3), Offset(size.width / 3, size.height), paint1);
+      canvas.drawLine(Offset(size.width - line2Offset, size.height * 2 / 3), Offset(size.width * 2 / 3, size.height), paint1);
+    }
   }
 
   @override
@@ -31,8 +44,9 @@ class TrianglePainter extends CustomPainter {
 class TriangleWidget extends StatelessWidget {
   double width;
   Color color;
+  bool editMode;
 
-  TriangleWidget({required this.width, required this.color});
+  TriangleWidget({required this.width, required this.color, this.editMode = false});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +54,7 @@ class TriangleWidget extends StatelessWidget {
       height: this.width,
       width: this.width,
       child: CustomPaint(
-        painter: TrianglePainter(cardSize: Size.square(this.width), color: this.color),
+        painter: TrianglePainter(cardSize: Size.square(this.width), color: this.color, editMode: this.editMode),
       ),
     );
   }
