@@ -24,15 +24,18 @@ class SquarePainter extends CustomPainter {
 }
 
 class SquareWidget extends StatelessWidget {
+
+  double width;
+
+  SquareWidget({required this.width});
+
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    var width =  size.width / 3 - 10;
     return Container(
-      height: width,
-      width: width,
+      height: this.width,
+      width: this.width,
       child: CustomPaint(
-        painter: SquarePainter(cardSize: Size.square(width)),
+        painter: SquarePainter(cardSize: Size.square(this.width)),
       ),
     );
   }

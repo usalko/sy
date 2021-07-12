@@ -25,15 +25,18 @@ class CirclePainter extends CustomPainter {
 }
 
 class CircleWidget extends StatelessWidget {
+
+  double width;
+
+  CircleWidget({required this.width});
+
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    var width =  size.width / 3 - 10;
     return Container(
-      height: width,
-      width: width,
+      height: this.width,
+      width: this.width,
       child: CustomPaint(
-        painter: CirclePainter(cardSize: Size.square(width)),
+        painter: CirclePainter(cardSize: Size.square(this.width)),
       ),
     );
   }

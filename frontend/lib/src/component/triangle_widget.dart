@@ -33,15 +33,18 @@ class TrianglePainter extends CustomPainter {
 }
 
 class TriangleWidget extends StatelessWidget {
+
+  double width;
+
+  TriangleWidget({required this.width});
+
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    var width =  size.width / 3 - 10;
     return Container(
-      height: width,
-      width: width,
+      height: this.width,
+      width: this.width,
       child: CustomPaint(
-        painter: TrianglePainter(cardSize: Size.square(width)),
+        painter: TrianglePainter(cardSize: Size.square(this.width)),
       ),
     );
   }
