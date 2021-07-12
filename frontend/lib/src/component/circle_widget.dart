@@ -1,19 +1,23 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class CirclePainter extends CustomPainter {
 
   Size cardSize;
+  Color color;
 
-  CirclePainter({required this.cardSize});
+  CirclePainter({required this.cardSize, required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
     var paint1 = Paint()
-      ..color = Color(0xff63aa65)
-      ..style = PaintingStyle.fill;
-    //a circle
+      ..color = this.color
+      ..isAntiAlias = true
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+    // a circle
     var centerX = this.cardSize.width / 2;
     var centerY = this.cardSize.height / 2;
     canvas.drawCircle(Offset(centerX, centerY), min(centerX, centerY), paint1);
@@ -27,8 +31,9 @@ class CirclePainter extends CustomPainter {
 class CircleWidget extends StatelessWidget {
 
   double width;
+  Color color;
 
-  CircleWidget({required this.width});
+  CircleWidget({required this.width, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,7 @@ class CircleWidget extends StatelessWidget {
       height: this.width,
       width: this.width,
       child: CustomPaint(
-        painter: CirclePainter(cardSize: Size.square(this.width)),
+        painter: CirclePainter(cardSize: Size.square(this.width), color: color),
       ),
     );
   }

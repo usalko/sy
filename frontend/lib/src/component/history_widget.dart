@@ -71,13 +71,13 @@ class _HistoryWidgetState extends State<HistoryWidget> {
         child: Center(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [TriangleWidget(width: 12), Text('13/04/2021')])),
+                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor), Text('13/04/2021')])),
       ),
       Container(
         child: Center(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [SquareWidget(width: 12), Text('12/04/2021')])),
+                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
       ),
     ];
     if (this.widget.viewModeService.Screen == TheScreen.Screen1) {
@@ -105,13 +105,13 @@ class _HistoryWidgetState extends State<HistoryWidget> {
         child: Center(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [TriangleWidget(width: 12), Text('13/04/2021')])),
+                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor,), Text('13/04/2021')])),
       ),
       Container(
         child: Center(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [SquareWidget(width: 12), Text('12/04/2021')])),
+                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
       ),
     ];
 
