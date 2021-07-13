@@ -84,6 +84,7 @@ class _MoodWidgetState extends State<MoodWidget> {
             editMode: true,
           ),
         ),
+        actionButtons(context),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Square) {
       var cardWidth = size.width / 1.9;
@@ -96,6 +97,7 @@ class _MoodWidgetState extends State<MoodWidget> {
             editMode: true,
           ),
         ),
+        actionButtons(context),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Circle) {
       var cardWidth = size.width / 1.9;
@@ -108,6 +110,7 @@ class _MoodWidgetState extends State<MoodWidget> {
             editMode: true,
           ),
         ),
+        actionButtons(context),
       ];
     } else {
       throw new UnimplementedError();
@@ -150,6 +153,52 @@ class _MoodWidgetState extends State<MoodWidget> {
             subheading: Divider(),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget actionButtons(BuildContext context) {
+    return SizedBox(
+      width: 130,
+      child: Padding(
+        padding: const EdgeInsets.all(0),
+        child: Card(
+            color: Theme.of(context).canvasColor,
+            elevation: 0,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.share),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.save),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+              ],
+            )),
       ),
     );
   }
