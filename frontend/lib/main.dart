@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
               viewModeService: widget.viewModeService),
         ),
         Expanded(
-          flex: 1,
+          flex: 6,
           child: MoodWidget(
               moodService: widget.moodService,
               viewModeService: widget.viewModeService),
