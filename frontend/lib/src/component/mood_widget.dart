@@ -71,7 +71,7 @@ class _MoodWidgetState extends State<MoodWidget> {
         ),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Triangle) {
-      var cardWidth = size.width / 3 - 10;
+      var cardWidth = size.width / 1.9;
       cards = [
         Card(
           child: TriangleWidget(
@@ -82,7 +82,7 @@ class _MoodWidgetState extends State<MoodWidget> {
         ),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Square) {
-      var cardWidth = size.width / 3 - 10;
+      var cardWidth = size.width / 1.9;
       cards = [
         Card(
           child: SquareWidget(
@@ -93,7 +93,7 @@ class _MoodWidgetState extends State<MoodWidget> {
         ),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Circle) {
-      var cardWidth = size.width / 3 - 10;
+      var cardWidth = size.width / 1.9;
       cards = [
         Card(
           child: CircleWidget(

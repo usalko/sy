@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 
 class CirclePainter extends CustomPainter {
 
-  Size cardSize;
   Color color;
   bool editMode;
 
-  CirclePainter({required this.cardSize, required this.color, required this.editMode});
+  CirclePainter({required this.color, required this.editMode});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -19,22 +18,27 @@ class CirclePainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
     // a circle
-    var centerX = this.cardSize.width / 2;
-    var centerY = this.cardSize.height / 2;
+    var centerX = size.width / 2;
+    var centerY = size.height / 2;
     canvas.drawCircle(Offset(centerX, centerY), min(centerX, centerY), paint1);
 
     // Draw zones
     if (editMode) {
-      canvas.drawCircle(Offset(centerX, centerY), min(centerX, centerY) / 4, paint1);
-      canvas.drawCircle(Offset(centerX / 2, centerY / 2), min(centerX, centerY) / 4, paint1);
-      canvas.drawCircle(Offset(centerX / 2, centerY * 3 / 2), min(centerX, centerY) / 4, paint1);
-      canvas.drawCircle(Offset(centerX * 3 / 2, centerY * 3 / 2), min(centerX, centerY) / 4, paint1);
-      canvas.drawCircle(Offset(centerX * 3 / 2, centerY / 2), min(centerX, centerY) / 4, paint1);
+      var squareSide = min(size.width, size.height);
+      var halfSquareSide = squareSide / 2;
+      var radius = squareSide / 6;
+      var topLeft = Offset((size.width - squareSide) / 2, (size.height - squareSide) / 2);
+      canvas.drawCircle(Offset(halfSquareSide, halfSquareSide) + topLeft, radius, paint1);
 
-      canvas.drawCircle(Offset(centerX, centerY * 3 / 2), min(centerX, centerY) / 4, paint1);
-      canvas.drawCircle(Offset(centerX, centerY / 2), min(centerX, centerY) / 4, paint1);
-      canvas.drawCircle(Offset(centerX * 3 / 2, centerY), min(centerX, centerY) / 4, paint1);
-      canvas.drawCircle(Offset(centerX / 2, centerY), min(centerX, centerY) / 4, paint1);
+      canvas.drawCircle(Offset(halfSquareSide, halfSquareSide / 3) + topLeft, radius, paint1);
+      canvas.drawCircle(Offset(halfSquareSide, halfSquareSide * (1 + 2 / 3)) + topLeft, radius, paint1);
+      canvas.drawCircle(Offset(halfSquareSide / 3, halfSquareSide) + topLeft, radius, paint1);
+      canvas.drawCircle(Offset(halfSquareSide * (1 + 2 / 3), halfSquareSide) + topLeft, radius, paint1);
+
+      canvas.drawCircle(Offset(halfSquareSide / 1.9, halfSquareSide / 1.9) + topLeft, radius, paint1);
+      canvas.drawCircle(Offset(halfSquareSide * (2 - 1 / 1.9), halfSquareSide / 1.9) + topLeft, radius, paint1);
+      canvas.drawCircle(Offset(halfSquareSide / 1.9, halfSquareSide * (2 - 1 / 1.9)) + topLeft, radius, paint1);
+      canvas.drawCircle(Offset(halfSquareSide * (2 - 1 / 1.9), halfSquareSide * (2 - 1 / 1.9)) + topLeft, radius, paint1);
     }
   }
 
@@ -56,7 +60,7 @@ class CircleWidget extends StatelessWidget {
       height: this.width,
       width: this.width,
       child: CustomPaint(
-        painter: CirclePainter(cardSize: Size.square(this.width), color: color, editMode: editMode),
+        painter: CirclePainter(color: color, editMode: editMode),
       ),
     );
   }
