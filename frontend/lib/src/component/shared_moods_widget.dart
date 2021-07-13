@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
+import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/screen_change_args.dart';
 import 'package:frontend/src/model/the_screen.dart';
 import 'package:frontend/src/service/mood_service.dart';
@@ -10,9 +11,7 @@ import 'package:frontend/src/service/view_mode_service.dart';
 
 class SharedMoodsWidget extends StatefulWidget {
   SharedMoodsWidget(
-      {Key? key,
-      required this.moodService,
-      required this.viewModeService})
+      {Key? key, required this.moodService, required this.viewModeService})
       : super(key: key);
 
   final MoodService moodService;
@@ -20,7 +19,6 @@ class SharedMoodsWidget extends StatefulWidget {
 
   @override
   _SharedMoodsWidgetState createState() => _SharedMoodsWidgetState();
-
 }
 
 class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
@@ -68,55 +66,38 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
       }
     });
 
-    var history = <Widget>[];
-    history = [
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor), Text('13/04/2021')])),
-      ),
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
-      ),
-    ];
+    var size = MediaQuery.of(context).size;
+
+    var sharedMoods = getSharedMoods(context);
     if (this.widget.viewModeService.Screen == TheScreen.Screen1) {
       return Column(
         children: <Widget>[
           Flexible(
-            child: ListView(
-              children: history,
+            child: GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(20),
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 0,
+              crossAxisCount: (size.width / 44).round(),
+              children: sharedMoods,
             ),
           )
         ],
       );
     }
-    return Container(
-      key: stickyKey,
-      height: 22.0,
-      child: Text("w" * (history.length * (8 + 1))), // Covered object anticipation
-    );
+    return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Container(
+            key: stickyKey,
+            height: 44.0,
+            child: SizedBox(
+              width: 44.0 * sharedMoods.length,
+            ) // Covered object anticipation
+            ));
   }
 
   Widget stickyBuilder(BuildContext context) {
-    var history = <Widget>[];
-    history = [
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor,), Text('13/04/2021')])),
-      ),
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
-      ),
-    ];
+    var sharedMoods = getSharedMoods(context);
 
     return AnimatedBuilder(
       animation: controller,
@@ -138,7 +119,7 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
                 alignment: Alignment.center,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: history,
+                  children: sharedMoods,
                 ),
               ),
             ),
@@ -147,5 +128,91 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
         return Container();
       },
     );
+  }
+
+  List<Widget> getSharedMoods(BuildContext context) {
+    return [
+      Container(
+        child: Center(
+            child: TriangleWidget(
+                width: 44,
+                showBorder: false,
+                content: <Geometry?>[
+              Geometry.triangle(Colors.blueGrey.value),
+              null,
+              Geometry.square(Colors.redAccent.value),
+              null,
+              Geometry.circle(Colors.greenAccent.value)
+            ])),
+      ),
+      Container(
+        child: Center(
+            child: TriangleWidget(
+                width: 44,
+                showBorder: false,
+                content: <Geometry?>[
+              Geometry.triangle(Colors.blueGrey.value),
+              null,
+              Geometry.square(Colors.redAccent.value),
+              null,
+              Geometry.circle(Colors.greenAccent.value)
+            ])),
+      ),
+      Container(
+        child: Center(
+            child: SquareWidget(
+          width: 44,
+          showBorder: false,
+          content: <Geometry?>[
+            Geometry.circle(Colors.blueGrey.value),
+            null,
+            Geometry.triangle(Colors.redAccent.value),
+            null,
+            Geometry.square(Colors.greenAccent.value)
+          ],
+        )),
+      ),
+      Container(
+        child: Center(
+            child: SquareWidget(
+          width: 44,
+          showBorder: false,
+          content: <Geometry?>[
+            Geometry.square(Colors.blueGrey.value),
+            null,
+            Geometry.circle(Colors.redAccent.value),
+            null,
+            Geometry.triangle(Colors.greenAccent.value)
+          ],
+        )),
+      ),
+      Container(
+        child: Center(
+            child: TriangleWidget(
+                width: 44,
+                showBorder: false,
+                content: <Geometry?>[
+              Geometry.triangle(Colors.blueGrey.value),
+              null,
+              Geometry.square(Colors.redAccent.value),
+              null,
+              Geometry.circle(Colors.greenAccent.value)
+            ])),
+      ),
+      Container(
+        child: Center(
+            child: SquareWidget(
+          width: 44,
+          showBorder: false,
+          content: <Geometry?>[
+            Geometry.square(Colors.blueGrey.value),
+            null,
+            Geometry.circle(Colors.redAccent.value),
+            null,
+            Geometry.triangle(Colors.greenAccent.value)
+          ],
+        )),
+      ),
+    ];
   }
 }

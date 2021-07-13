@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
+import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
+import 'package:frontend/src/model/mood.dart';
 import 'package:frontend/src/model/screen_change_args.dart';
 import 'package:frontend/src/model/the_screen.dart';
 import 'package:frontend/src/service/mood_service.dart';
@@ -81,7 +83,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           child: TriangleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
-            editMode: true,
+            showGrid: true,
           ),
         ),
         actionButtons(context),
@@ -94,7 +96,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           child: SquareWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
-            editMode: true,
+            showGrid: true,
           ),
         ),
         actionButtons(context),
@@ -107,7 +109,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           child: CircleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
-            editMode: true,
+            showGrid: true,
           ),
         ),
         actionButtons(context),

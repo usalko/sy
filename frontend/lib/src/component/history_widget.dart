@@ -65,21 +65,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       }
     });
 
-    var history = <Widget>[];
-    history = [
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor), Text('13/04/2021')])),
-      ),
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
-      ),
-    ];
+    var history = getHistory(context);
     if (this.widget.viewModeService.Screen == TheScreen.Screen1) {
       return Column(
         children: <Widget>[
@@ -99,21 +85,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
   }
 
   Widget stickyBuilder(BuildContext context) {
-    var history = <Widget>[];
-    history = [
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor,), Text('13/04/2021')])),
-      ),
-      Container(
-        child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
-      ),
-    ];
+    var history = getHistory(context);
 
     return AnimatedBuilder(
       animation: controller,
@@ -144,5 +116,22 @@ class _HistoryWidgetState extends State<HistoryWidget> {
         return Container();
       },
     );
+  }
+
+  List<Widget> getHistory(BuildContext context) {
+    return [
+      Container(
+        child: Center(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor), Text('13/04/2021')])),
+      ),
+      Container(
+        child: Center(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
+      ),
+    ];
   }
 }
