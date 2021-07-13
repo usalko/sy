@@ -27,7 +27,7 @@ class _MoodWidgetState extends State<MoodWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.moodService.apiDisableEvent.subscribe((args) {
+    widget.viewModeService.screenChangeEvent.subscribe((args) {
       if (args is ScreenChangeArgs) {
         this.setState(() {});
       }
@@ -177,7 +177,10 @@ class _MoodWidgetState extends State<MoodWidget> {
                         icon: const Icon(Icons.share),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () => setState(() {
+                          this.widget.viewModeService.Screen =
+                              TheScreen.Screen1;
+                        }),
                         icon: const Icon(Icons.close),
                       ),
                     ],
