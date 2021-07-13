@@ -23,7 +23,6 @@ class MoodWidget extends StatefulWidget {
 }
 
 class _MoodWidgetState extends State<MoodWidget> {
-
   Color screenPickerColor = Colors.white;
 
   @override
@@ -138,6 +137,8 @@ class _MoodWidgetState extends State<MoodWidget> {
           color: Theme.of(context).canvasColor,
           elevation: 0,
           child: ColorPicker(
+            pickerTypeLabels: Map.of(
+                {ColorPickerType.primary: '|', ColorPickerType.accent: '||'}),
             // Use the screenPickerColor as start color.
             color: screenPickerColor,
             // Update the screenPickerColor using the callback.
