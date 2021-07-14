@@ -63,7 +63,8 @@ class SyApp extends StatelessWidget {
             primarySwatch: syPrimaryColor,
             accentColor: sySecondaryColor,
             visualDensity: VisualDensity.adaptivePlatformDensity,
-            fontFamily: 'TexGyreHeros'),
+            fontFamily: 'TexGyreHeros',
+            ),
         home: HomePage(
           title: 'Share yours mood with anyone',
           moodService: MoodService(),

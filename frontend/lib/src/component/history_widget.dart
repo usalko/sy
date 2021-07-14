@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:frontend/src/component/error_message_widget.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
@@ -11,6 +12,7 @@ import 'package:frontend/src/service/mood_service.dart';
 import 'package:frontend/src/service/view_mode_service.dart';
 import 'package:intl/intl.dart';
 
+import 'api_is_disabled_widget.dart';
 import 'circle_widget.dart';
 
 class HistoryWidget extends StatefulWidget {
@@ -121,6 +123,10 @@ class _HistoryWidgetState extends State<HistoryWidget> {
   }
 
   Widget getHistory(BuildContext context, TheScreen? screen) {
+    if (this.widget.moodService.IsApiDisabled) {
+      return ApiIsDisabledWidget();
+    }
+
     return FutureBuilder<List<Mood>>(
       future: this.history,
       builder: (context, snapshot) {
@@ -137,7 +143,10 @@ class _HistoryWidgetState extends State<HistoryWidget> {
             children: snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
           );
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          if (this.widget.moodService.IsApiDisabled) {
+            return ApiIsDisabledWidget();
+          }
+          return ErrorMessageWidget("${snapshot.error}");
         }
 
         // By default, show a loading spinner.

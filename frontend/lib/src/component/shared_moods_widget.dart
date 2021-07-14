@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:frontend/src/component/api_is_disabled_widget.dart';
 import 'package:frontend/src/component/circle_widget.dart';
+import 'package:frontend/src/component/error_message_widget.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
@@ -123,6 +125,10 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
   }
 
   Widget getSharedMoods(BuildContext context, TheScreen? screen) {
+    if (this.widget.moodService.IsApiDisabled) {
+      return ApiIsDisabledWidget();
+    }
+
     return FutureBuilder<List<Mood>>(
       future: this.sharedMoods,
       builder: (context, snapshot) {
@@ -144,7 +150,10 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
             children: snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
           );
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          if (this.widget.moodService.IsApiDisabled) {
+            return ApiIsDisabledWidget();
+          }
+          return ErrorMessageWidget("${snapshot.error}");
         }
 
         // By default, show a loading spinner.

@@ -6,7 +6,7 @@ import 'package:frontend/src/model/mood.dart';
 import 'package:http/http.dart' as http;
 
 final INTEGRATION_TEST_MODE =
-    const bool.fromEnvironment('INTEGRATION_TEST_MODE', defaultValue: true);
+    const bool.fromEnvironment('INTEGRATION_TEST_MODE', defaultValue: false);
 
 class RequestAdapter {
   const RequestAdapter();
