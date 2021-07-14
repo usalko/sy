@@ -28,7 +28,6 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @SuppressWarnings("rawtypes")
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorItem> handle(ResourceNotFoundException e) {
         ErrorItem error = new ErrorItem();

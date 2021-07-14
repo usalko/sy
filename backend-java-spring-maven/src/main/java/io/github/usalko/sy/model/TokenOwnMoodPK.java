@@ -11,25 +11,25 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "user")
-public class UserOwnMoodPK implements Serializable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "token")
+public class TokenOwnMoodPK implements Serializable {
 
     private static final long serialVersionUID = 7213530449320295754L;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "token_id")
+    private Token token;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "own_mood_id")
     private OwnMood ownMood;
 
-    public User getUser() {
-        return user;
+    public Token getToken() {
+        return token;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setToken(Token token) {
+        this.token = token;
     }
 
     public OwnMood getOwnMood() {
@@ -48,13 +48,13 @@ public class UserOwnMoodPK implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserOwnMoodPK that = (UserOwnMoodPK) o;
-        return Objects.equals(user, that.user) &&
+        TokenOwnMoodPK that = (TokenOwnMoodPK) o;
+        return Objects.equals(token, that.token) &&
                 Objects.equals(ownMood, that.ownMood);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, ownMood);
+        return Objects.hash(token, ownMood);
     }
 }

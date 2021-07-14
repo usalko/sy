@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="userOwnMoods")
-public class User {
+@Table(name = "tokens")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="tokenOwnMoods")
+public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +22,9 @@ public class User {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateCreated;
 
-    @OneToMany(mappedBy = "pk.user")
+    @OneToMany(mappedBy = "pk.token")
     @Valid
-    private List<UserOwnMood> userOwnMoods = new ArrayList<>();
+    private List<TokenOwnMood> tokenOwnMoods = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -42,11 +42,11 @@ public class User {
         this.dateCreated = dateCreated;
     }
 
-    public List<UserOwnMood> getUserOwnMoods() {
-        return userOwnMoods;
+    public List<TokenOwnMood> getTokenOwnMoods() {
+        return tokenOwnMoods;
     }
 
-    public void setUserOwnMoods(List<UserOwnMood> userOwnMoods) {
-        this.userOwnMoods = userOwnMoods;
+    public void setTokenOwnMoods(List<TokenOwnMood> tokenOwnMoods) {
+        this.tokenOwnMoods = tokenOwnMoods;
     }
 }

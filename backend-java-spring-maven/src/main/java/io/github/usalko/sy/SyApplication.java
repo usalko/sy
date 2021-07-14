@@ -1,7 +1,7 @@
 package io.github.usalko.sy;
 
-import io.github.usalko.sy.model.Product;
-import io.github.usalko.sy.service.ProductService;
+import io.github.usalko.sy.model.GeometryShape;
+import io.github.usalko.sy.service.GeometryShapeService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,14 +15,11 @@ public class SyApplication {
     }
 
     @Bean
-    CommandLineRunner runner(ProductService productService) {
+    CommandLineRunner runner(GeometryShapeService geometryShapeService) {
         return args -> {
-            productService.save(new Product(1L, "Сливочная", 330.00, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/6.jpg"));
-            productService.save(new Product(2L, "Особая", 179.00, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/5.jpg"));
-            productService.save(new Product(3L, "Молочная", 225.00, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/4.jpg"));
-            productService.save(new Product(4L, "Нюренбергская", 315.00, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/3.jpg"));
-            productService.save(new Product(5L, "Мюнхенская", 330.00, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/2.jpg"));
-            productService.save(new Product(6L, "Русская", 189.00, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/1.jpg"));
+            geometryShapeService.save(new GeometryShape(1L, "triangle"));
+            geometryShapeService.save(new GeometryShape(2L, "square"));
+            geometryShapeService.save(new GeometryShape(3L, "circle"));
         };
     }
 }

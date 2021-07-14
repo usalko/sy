@@ -10,36 +10,36 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-public class UserOwnMood {
+public class TokenOwnMood {
 
     @EmbeddedId
     @JsonIgnore
-    private UserOwnMoodPK pk;
+    private TokenOwnMoodPK pk;
 
     @Column(nullable = false)
     private LocalDateTime moment;
 
-    public UserOwnMood() {
+    public TokenOwnMood() {
         super();
     }
 
-    public UserOwnMood(User user, OwnMood ownMood, LocalDateTime moment) {
-        pk = new UserOwnMoodPK();
-        pk.setUser(user);
+    public TokenOwnMood(Token token, OwnMood ownMood, LocalDateTime moment) {
+        pk = new TokenOwnMoodPK();
+        pk.setToken(token);
         pk.setOwnMood(ownMood);
         this.moment = moment;
     }
 
     @Transient
-    public User getUser() {
-        return this.pk.getUser();
+    public Token getToken() {
+        return this.pk.getToken();
     }
 
-    public UserOwnMoodPK getPk() {
+    public TokenOwnMoodPK getPk() {
         return pk;
     }
 
-    public void setPk(UserOwnMoodPK pk) {
+    public void setPk(TokenOwnMoodPK pk) {
         this.pk = pk;
     }
 
@@ -59,7 +59,7 @@ public class UserOwnMood {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserOwnMood that = (UserOwnMood) o;
+        TokenOwnMood that = (TokenOwnMood) o;
         return Objects.equals(pk, that.pk) &&
                 Objects.equals(moment, that.moment);
     }

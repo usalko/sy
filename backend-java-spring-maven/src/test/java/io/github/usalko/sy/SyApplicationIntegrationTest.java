@@ -1,10 +1,9 @@
 package io.github.usalko.sy;
 
-import io.github.usalko.sy.controller.OrderController;
-import io.github.usalko.sy.controller.ProductController;
-import io.github.usalko.sy.dto.OrderProductDto;
-import io.github.usalko.sy.model.Order;
-import io.github.usalko.sy.model.Product;
+import io.github.usalko.sy.controller.HealthCheckController;
+import io.github.usalko.sy.controller.MoodController;
+import io.github.usalko.sy.model.GeometryShape;
+import io.github.usalko.sy.model.Mood;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +13,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,75 +22,79 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SyApplication.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {SyApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SyApplicationIntegrationTest {
 
-    @Autowired private TestRestTemplate restTemplate;
+    @Autowired
+    private TestRestTemplate restTemplate;
 
-    @LocalServerPort private int port;
+    @LocalServerPort
+    private int port;
 
-    @Autowired private ProductController productController;
+    @Autowired
+    private HealthCheckController healthCheckController;
 
-    @Autowired private OrderController orderController;
+    @Autowired
+    private MoodController moodController;
 
     @Test
     public void contextLoads() {
         Assertions
-                .assertThat(productController)
+                .assertThat(healthCheckController)
                 .isNotNull();
         Assertions
-                .assertThat(orderController)
+                .assertThat(moodController)
                 .isNotNull();
     }
 
     @Test
-    public void givenGetProductsApiCall_whenProductListRetrieved_thenSizeMatchAndListContainsProductNames() {
-        ResponseEntity<Iterable<Product>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/api/products", HttpMethod.GET, null, new ParameterizedTypeReference<Iterable<Product>>() {
+    public void givenGetGeometryShapesApiCall_whenGeometryShapeListRetrieved_thenSizeMatchAndListContainsGeometryShapeNames() {
+        ResponseEntity<Iterable<GeometryShape>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/api/geometryShapes", HttpMethod.GET, null, new ParameterizedTypeReference<Iterable<GeometryShape>>() {
         });
-        Iterable<Product> products = responseEntity.getBody();
+        Iterable<GeometryShape> geometryShapes = responseEntity.getBody();
         Assertions
-                .assertThat(products)
+                .assertThat(geometryShapes)
                 .hasSize(7);
 
-        assertThat(products, hasItem(hasProperty("name", is("TV Set"))));
-        assertThat(products, hasItem(hasProperty("name", is("Game Console"))));
-        assertThat(products, hasItem(hasProperty("name", is("Sofa"))));
-        assertThat(products, hasItem(hasProperty("name", is("Icecream"))));
-        assertThat(products, hasItem(hasProperty("name", is("Beer"))));
-        assertThat(products, hasItem(hasProperty("name", is("Phone"))));
-        assertThat(products, hasItem(hasProperty("name", is("Watch"))));
+        assertThat(geometryShapes, hasItem(hasProperty("name", is("TV Set"))));
+        assertThat(geometryShapes, hasItem(hasProperty("name", is("Game Console"))));
+        assertThat(geometryShapes, hasItem(hasProperty("name", is("Sofa"))));
+        assertThat(geometryShapes, hasItem(hasProperty("name", is("Icecream"))));
+        assertThat(geometryShapes, hasItem(hasProperty("name", is("Beer"))));
+        assertThat(geometryShapes, hasItem(hasProperty("name", is("Phone"))));
+        assertThat(geometryShapes, hasItem(hasProperty("name", is("Watch"))));
     }
 
     @Test
-    public void givenGetOrdersApiCall_whenProductListRetrieved_thenSizeMatchAndListContainsProductNames() {
-        ResponseEntity<Iterable<Order>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/api/orders", HttpMethod.GET, null, new ParameterizedTypeReference<Iterable<Order>>() {
+    public void givenGetMoodsApiCall_whenGeometryShapeListRetrieved_thenSizeMatchAndListContainsGeometryShapeNames() {
+        ResponseEntity<Iterable<Mood>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/api/moods", HttpMethod.GET, null, new ParameterizedTypeReference<Iterable<Mood>>() {
         });
 
-        Iterable<Order> orders = responseEntity.getBody();
+        Iterable<Mood> moods = responseEntity.getBody();
         Assertions
-                .assertThat(orders)
+                .assertThat(moods)
                 .hasSize(0);
     }
 
-    @Test
-    public void givenPostOrder_whenBodyRequestMatcherJson_thenResponseContainsEqualObjectProperties() {
-        final ResponseEntity<Order> postResponse = restTemplate.postForEntity("http://localhost:" + port + "/api/orders", prepareOrderForm(), Order.class);
-        Order order = postResponse.getBody();
-        Assertions
-                .assertThat(postResponse.getStatusCode())
-                .isEqualByComparingTo(HttpStatus.CREATED);
+//    @Test
+//    public void givenPostMood_whenBodyRequestMatcherJson_thenResponseContainsEqualObjectProperties() {
+//        final ResponseEntity<Mood> postResponse = restTemplate.postForEntity("http://localhost:" + port + "/api/moods", prepareMoodForm(), Mood.class);
+//        Mood mood = postResponse.getBody();
+//        Assertions
+//                .assertThat(postResponse.getStatusCode())
+//                .isEqualByComparingTo(HttpStatus.CREATED);
+//
+//        assertThat(mood, hasProperty("status", is("PAID")));
+//        assertThat(mood.getMoodGeometryShapes(), hasItem(hasProperty("quantity", is(2))));
+//    }
 
-        assertThat(order, hasProperty("status", is("PAID")));
-        assertThat(order.getOrderProducts(), hasItem(hasProperty("quantity", is(2))));
-    }
-
-    private OrderController.OrderForm prepareOrderForm() {
-        OrderController.OrderForm orderForm = new OrderController.OrderForm();
-        OrderProductDto productDto = new OrderProductDto();
-        productDto.setProduct(new Product(1L, "TV Set", 300.00, "http://placehold.it/200x100"));
-        productDto.setQuantity(2);
-        orderForm.setProductOrders(Collections.singletonList(productDto));
-
-        return orderForm;
-    }
+//    private MoodController.MoodForm prepareMoodForm() {
+//        MoodController.MoodForm moodForm = new MoodController.MoodForm();
+//        MoodGeometryShapeDto geometryShapeDto = new MoodGeometryShapeDto();
+//        geometryShapeDto.setGeometryShape(new GeometryShape(1L, "TV Set", 300.00, "http://placehold.it/200x100"));
+//        geometryShapeDto.setColor(2);
+//        moodForm.setGeometryShapeMoods(Collections.singletonList(geometryShapeDto));
+//
+//        return moodForm;
+//    }
 }

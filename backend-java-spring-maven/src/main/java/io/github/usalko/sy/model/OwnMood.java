@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class OwnMood {
+public class OwnMood extends Mood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,14 +12,14 @@ public class OwnMood {
 
     @NotNull(message = "Parent geometry form is required.")
     @Basic(optional = false)
-    private GeometryForm parentForm;
+    private GeometryShape parentForm;
 
     @NotNull(message = "Content is required.")
     @Basic(optional = false)
     private String content;
 
     public OwnMood(Long id,
-                   @NotNull(message = "Parent geometry form is required.") GeometryForm parentForm,
+                   @NotNull(message = "Parent geometry form is required.") GeometryShape parentForm,
                    @NotNull(message = "Content is required.") String content) {
         this.id = id;
         this.parentForm = parentForm;
@@ -37,11 +37,11 @@ public class OwnMood {
         this.id = id;
     }
 
-    public GeometryForm getParentForm() {
+    public GeometryShape getParentForm() {
         return parentForm;
     }
 
-    public void setParentForm(GeometryForm parentForm) {
+    public void setParentForm(GeometryShape parentForm) {
         this.parentForm = parentForm;
     }
 
