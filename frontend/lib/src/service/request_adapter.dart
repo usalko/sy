@@ -5,11 +5,21 @@ import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/mood.dart';
 import 'package:http/http.dart' as http;
 
+final INTEGRATION_TEST_MODE =
+    const bool.fromEnvironment('INTEGRATION_TEST_MODE', defaultValue: true);
+
 class RequestAdapter {
   const RequestAdapter();
 
   Future<http.Response> request(Uri url, {Map<String, String>? headers}) {
-    //return http.get(url, headers: headers);
+    if (INTEGRATION_TEST_MODE) {
+      return integrationTestSupport(url, headers);
+    }
+    return http.get(url, headers: headers);
+  }
+
+  Future<http.Response> integrationTestSupport(
+      Uri url, Map<String, String>? headers) {
     return Future.delayed(Duration(seconds: 5), () {
       if (url.path.contains('GetSharedMoods')) {
         return http.Response.bytes(
@@ -33,19 +43,16 @@ class RequestAdapter {
                 Geometry.square(Colors.green.value),
                 null,
                 Geometry.circle(Colors.blue.value)
-              ], created: DateTime.now()).toJson()
+              ], created: DateTime.now())
+                  .toJson()
             ])),
             200);
       }
       if (url.path.contains('KeepMoodForNow')) {
-        return http.Response.bytes(
-            utf8.encode(jsonEncode(['Ok'])),
-            200);
+        return http.Response.bytes(utf8.encode(jsonEncode(['Ok'])), 200);
       }
       if (url.path.contains('ShareMood')) {
-        return http.Response.bytes(
-            utf8.encode(jsonEncode(['Ok'])),
-            200);
+        return http.Response.bytes(utf8.encode(jsonEncode(['Ok'])), 200);
       }
       throw new UnimplementedError();
     });
