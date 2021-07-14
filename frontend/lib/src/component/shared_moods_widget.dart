@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:frontend/src/component/circle_widget.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
-import 'package:frontend/src/model/geometry.dart';
+import 'package:frontend/src/model/geometry_shape.dart';
+import 'package:frontend/src/model/mood.dart';
 import 'package:frontend/src/model/screen_change_args.dart';
 import 'package:frontend/src/model/the_screen.dart';
 import 'package:frontend/src/service/mood_service.dart';
@@ -29,6 +31,8 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
   GlobalKey stickyKey = GlobalKey();
   GlobalKey listViewKey = GlobalKey();
 
+  late Future<List<Mood>> sharedMoods;
+
   @override
   void initState() {
     sticky?.remove();
@@ -39,6 +43,8 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       Overlay.of(context)?.insert(this.sticky!);
     });
+
+    this.sharedMoods = this.widget.moodService.getSharedMoods();
 
     super.initState();
   }
@@ -66,21 +72,11 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
       }
     });
 
-    var size = MediaQuery.of(context).size;
-
-    var sharedMoods = getSharedMoods(context);
     if (this.widget.viewModeService.Screen == TheScreen.Screen1) {
       return Column(
         children: <Widget>[
           Flexible(
-            child: GridView.count(
-              primary: false,
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 0,
-              mainAxisSpacing: 0,
-              crossAxisCount: (size.width / 44).round(),
-              children: sharedMoods,
-            ),
+            child: getSharedMoods(context, this.widget.viewModeService.Screen),
           )
         ],
       );
@@ -91,14 +87,12 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
             key: stickyKey,
             height: 44.0,
             child: SizedBox(
-              width: 44.0 * sharedMoods.length,
+              width: 44.0 * 10,
             ) // Covered object anticipation
             ));
   }
 
   Widget stickyBuilder(BuildContext context) {
-    var sharedMoods = getSharedMoods(context);
-
     return AnimatedBuilder(
       animation: controller,
       builder: (_, Widget? child) {
@@ -117,10 +111,8 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
               child: Container(
                 key: this.listViewKey,
                 alignment: Alignment.center,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: sharedMoods,
-                ),
+                child:
+                    getSharedMoods(context, this.widget.viewModeService.Screen),
               ),
             ),
           );
@@ -130,89 +122,61 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
     );
   }
 
-  List<Widget> getSharedMoods(BuildContext context) {
-    return [
-      Container(
+  Widget getSharedMoods(BuildContext context, TheScreen? screen) {
+    return FutureBuilder<List<Mood>>(
+      future: this.sharedMoods,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var size = MediaQuery.of(context).size;
+          if (screen == TheScreen.Screen1) {
+            return GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(20),
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 0,
+              crossAxisCount: (size.width / 44).round(),
+              children:
+                  snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
+            );
+          }
+          return ListView(
+            scrollDirection: Axis.horizontal,
+            children: snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        // By default, show a loading spinner.
+        return Padding(
+            padding: EdgeInsets.all(6),
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ));
+      },
+    );
+  }
+
+  Widget _moodWidget(Mood mood) {
+    if (mood.kind == GeometryShape.Triangle) {
+      return Container(
         child: Center(
             child: TriangleWidget(
-                width: 44,
-                showBorder: false,
-                content: <Geometry?>[
-              Geometry.triangle(Colors.blueGrey.value),
-              null,
-              Geometry.square(Colors.redAccent.value),
-              null,
-              Geometry.circle(Colors.greenAccent.value)
-            ])),
-      ),
-      Container(
-        child: Center(
-            child: TriangleWidget(
-                width: 44,
-                showBorder: false,
-                content: <Geometry?>[
-              Geometry.triangle(Colors.blueGrey.value),
-              null,
-              Geometry.square(Colors.redAccent.value),
-              null,
-              Geometry.circle(Colors.greenAccent.value)
-            ])),
-      ),
-      Container(
+                width: 44, showBorder: false, content: mood.content)),
+      );
+    } else if (mood.kind == GeometryShape.Square) {
+      return Container(
         child: Center(
             child: SquareWidget(
-          width: 44,
-          showBorder: false,
-          content: <Geometry?>[
-            Geometry.circle(Colors.blueGrey.value),
-            null,
-            Geometry.triangle(Colors.redAccent.value),
-            null,
-            Geometry.square(Colors.greenAccent.value)
-          ],
-        )),
-      ),
-      Container(
+                width: 44, showBorder: false, content: mood.content)),
+      );
+    } else if (mood.kind == GeometryShape.Circle) {
+      return Container(
         child: Center(
-            child: SquareWidget(
-          width: 44,
-          showBorder: false,
-          content: <Geometry?>[
-            Geometry.square(Colors.blueGrey.value),
-            null,
-            Geometry.circle(Colors.redAccent.value),
-            null,
-            Geometry.triangle(Colors.greenAccent.value)
-          ],
-        )),
-      ),
-      Container(
-        child: Center(
-            child: TriangleWidget(
-                width: 44,
-                showBorder: false,
-                content: <Geometry?>[
-              Geometry.triangle(Colors.blueGrey.value),
-              null,
-              Geometry.square(Colors.redAccent.value),
-              null,
-              Geometry.circle(Colors.greenAccent.value)
-            ])),
-      ),
-      Container(
-        child: Center(
-            child: SquareWidget(
-          width: 44,
-          showBorder: false,
-          content: <Geometry?>[
-            Geometry.square(Colors.blueGrey.value),
-            null,
-            Geometry.circle(Colors.redAccent.value),
-            null,
-            Geometry.triangle(Colors.greenAccent.value)
-          ],
-        )),
-      ),
-    ];
+            child: CircleWidget(
+                width: 44, showBorder: false, content: mood.content)),
+      );
+    }
+    throw new UnimplementedError();
   }
 }
