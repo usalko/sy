@@ -20,3 +20,7 @@
 # is commented out by default.
 #.vscode/
 
+# Eclipse snots
+.project
+.classpath
+.settings
