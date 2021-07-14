@@ -26,6 +26,7 @@ class MoodWidget extends StatefulWidget {
 
 class _MoodWidgetState extends State<MoodWidget> {
   Color screenPickerColor = Colors.white;
+  Mood? mood;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +77,7 @@ class _MoodWidgetState extends State<MoodWidget> {
         ),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Triangle) {
+      this.mood = Mood.triangle(this.mood != null ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Triangle),
@@ -89,6 +91,7 @@ class _MoodWidgetState extends State<MoodWidget> {
         actionButtons(context),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Square) {
+      this.mood = Mood.square(this.mood != null ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Square),
@@ -102,6 +105,7 @@ class _MoodWidgetState extends State<MoodWidget> {
         actionButtons(context),
       ];
     } else if (widget.viewModeService.Screen == TheScreen.Screen2Circle) {
+      this.mood = Mood.circle(this.mood != null ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Circle),
@@ -175,7 +179,15 @@ class _MoodWidgetState extends State<MoodWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (await this.widget.moodService.ShareMood(
+                              this.widget.moodService.Token, this.mood!)) {
+                            setState(() {
+                              this.widget.viewModeService.Screen =
+                                  TheScreen.Screen1;
+                            });
+                          }
+                        },
                         icon: const Icon(Icons.share),
                       ),
                       IconButton(
@@ -194,7 +206,15 @@ class _MoodWidgetState extends State<MoodWidget> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (await this.widget.moodService.KeepMoodForNow(
+                            this.widget.moodService.Token, this.mood!)) {
+                          setState(() {
+                            this.widget.viewModeService.Screen =
+                                TheScreen.Screen1;
+                          });
+                        }
+                      },
                       icon: const Icon(Icons.save),
                     ),
                   ),

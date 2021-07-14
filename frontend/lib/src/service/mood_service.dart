@@ -45,7 +45,7 @@ class MoodService {
     throw Exception('Failed to load history');
   }
 
-  Future<bool> KeepModForNow(String token, Mood mood) async {
+  Future<bool> KeepMoodForNow(String token, Mood mood) async {
     final response =
       await RequestAdapter().request(Uri.parse('$API_ENDPOINT/KeepMoodForNow?token=$token&mood=${Uri.encodeQueryComponent(json.encode(mood.toJson()))}'));
     if (response.statusCode == 200) {
