@@ -12,8 +12,11 @@ final API_ENDPOINT = const String.fromEnvironment('API_ENDPOINT', defaultValue: 
 /// Represents a global application state
 class MoodService {
   bool? _apiDisabled = DEFAULT_API_DISABLED;
+  String? _token;
 
   final apiDisableEvent = Event<ApiDisableArgs>();
+
+  String get Token => _token ?? '1';
 
   set ApiDisabled(bool? value) {
     this._apiDisabled = value;

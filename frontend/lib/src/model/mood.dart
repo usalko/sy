@@ -17,14 +17,14 @@ class Mood {
       json['id'],
       GeometryShapeExt.fromRaw(json['kind'] as String),
       (json['content'] as List<dynamic>).map((e) => e == null ? null : Geometry.fromJson(e)).toList(),
-      created: json['created'],
+      created: json['created'] != null ? DateTime.parse(json['created']): null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'created': created,
+      'created': created?.toIso8601String(),
       'kind': GeometryShapeExt.toJson(kind),
       'content': content.map((e) => e != null ? e.toJson(): null).toList()
     };

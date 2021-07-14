@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
+import 'package:frontend/src/model/geometry_shape.dart';
+import 'package:frontend/src/model/mood.dart';
 import 'package:frontend/src/model/screen_change_args.dart';
 import 'package:frontend/src/model/the_screen.dart';
 import 'package:frontend/src/service/mood_service.dart';
 import 'package:frontend/src/service/view_mode_service.dart';
+import 'package:intl/intl.dart';
+
+import 'circle_widget.dart';
 
 class HistoryWidget extends StatefulWidget {
   HistoryWidget(
@@ -28,6 +33,8 @@ class _HistoryWidgetState extends State<HistoryWidget> {
   GlobalKey stickyKey = GlobalKey();
   GlobalKey listViewKey = GlobalKey();
 
+  late Future<List<Mood>> history;
+
   @override
   void initState() {
     sticky?.remove();
@@ -38,6 +45,9 @@ class _HistoryWidgetState extends State<HistoryWidget> {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       Overlay.of(context)?.insert(this.sticky!);
     });
+
+    this.history =
+        this.widget.moodService.getHistory(this.widget.moodService.Token);
 
     super.initState();
   }
@@ -65,14 +75,11 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       }
     });
 
-    var history = getHistory(context);
     if (this.widget.viewModeService.Screen == TheScreen.Screen1) {
       return Column(
         children: <Widget>[
           Flexible(
-            child: ListView(
-              children: history,
-            ),
+            child: getHistory(context, this.widget.viewModeService.Screen),
           )
         ],
       );
@@ -80,13 +87,11 @@ class _HistoryWidgetState extends State<HistoryWidget> {
     return Container(
       key: stickyKey,
       height: 22.0,
-      child: Text("w" * (history.length * (8 + 1))), // Covered object anticipation
+      child: Text("w" * (4 * (8 + 1))), // Covered object anticipation
     );
   }
 
   Widget stickyBuilder(BuildContext context) {
-    var history = getHistory(context);
-
     return AnimatedBuilder(
       animation: controller,
       builder: (_, Widget? child) {
@@ -105,10 +110,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
               child: Container(
                 key: this.listViewKey,
                 alignment: Alignment.center,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: history,
-                ),
+                child: getHistory(context, this.widget.viewModeService.Screen),
               ),
             ),
           );
@@ -118,20 +120,71 @@ class _HistoryWidgetState extends State<HistoryWidget> {
     );
   }
 
-  List<Widget> getHistory(BuildContext context) {
-    return [
-      Container(
+  Widget getHistory(BuildContext context, TheScreen? screen) {
+    return FutureBuilder<List<Mood>>(
+      future: this.history,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var size = MediaQuery.of(context).size;
+          if (screen == TheScreen.Screen1) {
+            return ListView(
+              children:
+                  snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
+            );
+          }
+          return ListView(
+            scrollDirection: Axis.horizontal,
+            children: snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        // By default, show a loading spinner.
+        return Padding(
+            padding: EdgeInsets.all(6),
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ));
+      },
+    );
+  }
+
+  Widget _moodWidget(Mood mood) {
+    if (mood.kind == GeometryShape.Triangle) {
+      return Container(
         child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [TriangleWidget(width: 12, color: Theme.of(context).accentColor), Text('13/04/2021')])),
-      ),
-      Container(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          TriangleWidget(
+              width: 12,
+              color: Theme.of(context).accentColor,
+              content: mood.content),
+          Text(DateFormat('dd/MM/yyyy').format(mood.created!))
+        ])),
+      );
+    } else if (mood.kind == GeometryShape.Square) {
+      return Container(
         child: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [SquareWidget(width: 12, color: Theme.of(context).accentColor), Text('12/04/2021')])),
-      ),
-    ];
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          SquareWidget(
+              width: 12,
+              color: Theme.of(context).accentColor,
+              content: mood.content),
+          Text(DateFormat('dd/MM/yyyy').format(mood.created!))
+        ])),
+      );
+    } else if (mood.kind == GeometryShape.Circle) {
+      return Container(
+        child: Center(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          CircleWidget(
+              width: 12,
+              color: Theme.of(context).accentColor,
+              content: mood.content),
+          Text(DateFormat('dd/MM/yyyy').format(mood.created!))
+        ])),
+      );
+    }
+    throw new UnimplementedError();
   }
 }
