@@ -23,7 +23,7 @@ public class HealthCheckController {
         this.GeometryShapeService = GeometryShapeService;
     }
 
-    @GetMapping(value = {"", "/"})
+    @GetMapping(value = {"/"})
     public @NotNull Iterable<String> getGeometryShapes() {
         return StreamSupport.stream(GeometryShapeService.getAllGeometryShapes().spliterator(), false)
                 .map(GeometryShape::getMnemonic).collect(Collectors.toList());
