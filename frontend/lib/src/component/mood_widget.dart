@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
-import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
 import 'package:frontend/src/model/mood.dart';
 import 'package:frontend/src/model/screen_change_args.dart';
