@@ -1,0 +1,77 @@
+#!/bin/bash
+
+COMMAND=$1
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        *) COMMAND=$1; break ;;
+    esac
+    shift
+done
+if [ -f '.buildew' ]; then
+	echo Use .buildew file to read sensitive information
+	while IPS='=' read -r key value; do
+        eval ${key}
+	done < '.buildew'
+else
+    # REGENERATE SENSITIVE INFO FROM TEMPLATE
+    cat >'.buildew'<< EOF
+AWS_ACCOUNT=1234567890.dkr.ecr.us-east-x.amazonaws.com
+AWS_PROFILE=devops.user
+AWS_REGION=us-east-x
+
+EOF
+fi
+
+
+echo EXECUTE
+echo =========== $COMMAND
+echo $COMMAND ===========
+echo COMMAND
+
+if [ "x$COMMAND" == "xbuild" ]; then
+    mkdir .pub-cache
+    docker build -t buildew/flutter:build . -f Dockerfile.buildew
+    docker run --rm -it -v ${PWD}:/build --env PUB_CACHE=.pub-cache --workdir /build buildew/flutter:build flutter pub get
+    docker run --rm -it -v ${PWD}:/build --env PUB_CACHE=.pub-cache --workdir /build buildew/flutter:build flutter build web --web-renderer canvaskit --dart-define API_ENDPOINT=/api
+    docker build -t demo2/demo21:latest .
+fi
+
+if [ "x$COMMAND" == "xrun" ]; then
+    echo 'Run docker image demo21'
+    docker container rm demo21
+    docker run -p 80 -l demo21 --name demo21 demo2/demo21:latest
+fi
+
+if [ "x$COMMAND" == "xdev" ]; then
+    echo 'Restore flutter for development'
+    sudo rm -fr build
+    flutter upgrade --force
+    flutter pub get
+    export PUB_CACHE=~/.pub-cache
+fi
+
+if [ "x$COMMAND" == "xstop" ]; then
+    echo 'Stop docker image demo21'
+    docker kill demo21
+fi
+
+if [ "x$COMMAND" == "xdeploy" ]; then
+    build
+    echo Deploy docker image to the AWS
+    echo I\'ll use account: $AWS_ACCOUNT \(like: 1234567.dkr.ecr.us-east-2.amazonaws.com\)
+    echo AWS_PROFILE is $AWS_PROFILE
+    echo AWS_REGION is $AWS_REGION
+    aws ecr get-login-password --profile $AWS_PROFILE --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT
+    mkdir -p .prebuild
+    cp -fr ~/.demo21 .prebuild
+    docker build -t demo21 .
+    rm -fr .prebuild
+    docker tag demo21:latest $AWS_ACCOUNT/demo21:latest
+    docker push $AWS_ACCOUNT/demo21:latest
+fi
+
+
+AVAILABLE_COMMANDS="build run dev stop deploy"
+echo ''
+[[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
+

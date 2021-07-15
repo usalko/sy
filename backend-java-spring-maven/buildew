@@ -1,0 +1,91 @@
+#!/bin/bash
+
+COMMAND=$1
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        *) COMMAND=$1; break ;;
+    esac
+    shift
+done
+
+if [ -f '.buildew' ]; then
+	echo Use .buildew file to read sensitive information
+	while IPS='=' read -r key value; do
+        eval ${key}
+	done < '.buildew'
+else
+    # REGENERATE SENSITIVE INFO FROM TEMPLATE
+    cat >'.buildew'<< EOF
+AWS_ACCOUNT=1234567890.dkr.ecr.us-east-x.amazonaws.com
+AWS_PROFILE=devops.user
+AWS_REGION=us-east-x
+EOF
+fi
+
+echo EXECUTE
+echo =========== $COMMAND
+echo $COMMAND ===========
+echo COMMAND
+
+if [ "x$COMMAND" == "xbuild" ]; then
+    [ -d ~/.m2 ] || mkdir ~/.m2
+    docker run --rm -it -v ${PWD}:/build -u $(id -u ${USER}):$(id -g ${USER}) -v ~/.m2:/.m2 -e MAVEN_OPTS="-Dmaven.repo.local=/.m2" --workdir /build maven:3.8.1 mvn package
+    docker build -t demo2/demo22:latest .
+fi
+
+if [ "x$COMMAND" == "xbuild-demo" ]; then
+    CURRENT_FOLDER=$PWD
+    cd ../frontend
+    ./buildew build
+    cd $CURRENT_FOLDER
+    [ -d ~/.m2 ] || mkdir ~/.m2
+    docker run --rm -it -v ${PWD}:/build -u $(id -u ${USER}):$(id -g ${USER}) -v ~/.m2:/.m2 -e MAVEN_OPTS="-Dmaven.repo.local=/.m2" --workdir /build maven:3.8.1 mvn package
+    cp -fr ../frontend/build/web target/
+    docker build -t demo2/demo212:latest . -f Dockerfile.212
+fi
+
+if [ "x$COMMAND" == "xrun" ]; then
+    echo 'Run docker image demo22'
+    docker container rm demo22
+    docker run -p 8080 -l demo22 --name demo22 demo2/demo22:latest
+fi
+
+if [ "x$COMMAND" == "xrun-demo" ]; then
+    echo 'Run docker image demo212'
+    docker container rm demo212
+    docker run -p 80 -l demo212 --name demo212 demo2/demo212:latest
+fi
+
+if [ "x$COMMAND" == "xstop" ]; then
+    echo 'Stop docker image demo22'
+    docker kill demo22
+fi
+
+if [ "x$COMMAND" == "xstop-demo" ]; then
+    echo 'Stop docker image demo212'
+    docker kill demo212
+fi
+
+# TESTS
+# venv/bin/python -m unittest discover -s ./tests -p 'test_*.py' -t . -b --locals -v
+
+if [ "x$COMMAND" == "xdeploy" ]; then
+    build
+    echo Deploy docker image to the AWS
+    echo I\'ll use account: $AWS_ACCOUNT \(like: 1234567.dkr.ecr.us-east-1.amazonaws.com\)
+    echo AWS_PROFILE is $AWS_PROFILE
+    echo AWS_REGION is $AWS_REGION
+    aws ecr get-login-password --profile $AWS_PROFILE --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT
+    mkdir -p .prebuild
+    cp -fr ~/.demo22 .prebuild
+    docker build -t demo22 .
+    rm -fr .prebuild
+    docker tag demo22:latest $AWS_ACCOUNT/demo22:latest
+    docker push $AWS_ACCOUNT/demo22:latest
+fi
+
+
+AVAILABLE_COMMANDS="build build-demo run run-demo stop stop-demo deploy"
+echo ''
+[[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
+

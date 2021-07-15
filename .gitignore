@@ -24,3 +24,6 @@
 .project
 .classpath
 .settings
+
+# Sensitive info
+.buildew

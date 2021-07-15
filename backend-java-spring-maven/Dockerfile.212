@@ -1,0 +1,11 @@
+# syntax=docker/dockerfile:1
+FROM nginx:alpine
+
+RUN apk add openjdk8
+
+COPY ./target/web/ /usr/share/nginx/html/
+RUN addgroup -S spring && adduser -S spring -G spring
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+EXPOSE 80
+CMD nginx && java -jar /app.jar
