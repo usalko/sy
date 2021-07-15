@@ -17,7 +17,7 @@ public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateCreated;
@@ -26,11 +26,11 @@ public class Token {
     @Valid
     private List<TokenOwnMood> tokenOwnMoods = new ArrayList<>();
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

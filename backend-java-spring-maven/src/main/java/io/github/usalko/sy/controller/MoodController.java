@@ -1,6 +1,5 @@
 package io.github.usalko.sy.controller;
 
-import io.github.usalko.sy.dto.MoodGeometryShapeDto;
 import io.github.usalko.sy.model.Mood;
 import io.github.usalko.sy.service.GeometryShapeService;
 import io.github.usalko.sy.service.MoodGeometryShapeService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -28,28 +26,28 @@ public class MoodController {
         this.moodGeometryShapeService = moodGeometryShapeService;
     }
 
-    @GetMapping(name = "GetSharedMoods")
+    @GetMapping(value = {"", "/GetSharedMoods"})
     @ResponseStatus(HttpStatus.OK)
-    public @NotNull Iterable<Mood> getSharedMoods() {
-        return this.moodService.getAllMoods();
+    public @NotNull Iterable<? extends Mood> getSharedMoods() {
+        return this.moodService.getSharedMoods(50);
     }
 
-    @GetMapping(name = "GetHistory")
+    @GetMapping(value = {"", "/GetHistory"})
     @ResponseStatus(HttpStatus.OK)
-    public @NotNull Iterable<Mood> getHistory(String token) {
-        return this.moodService.getAllMoods();
+    public @NotNull Iterable<? extends Mood> getHistory(String token) {
+        return this.moodService.getSharedMoods(50);
     }
 
-    @GetMapping(name = "KeepMoodForNow")
+    @GetMapping(value = {"", "/KeepMoodForNow"})
     @ResponseStatus(HttpStatus.OK)
-    public @NotNull boolean keepMoodForNow(String token, Mood mood) {
-        return false;
+    public @NotNull void keepMoodForNow(String token, Mood mood) {
+        this.moodService.keep(token, mood);
     }
 
-    @GetMapping(name = "ShareMood")
+    @GetMapping(value = {"", "/ShareMood"})
     @ResponseStatus(HttpStatus.OK)
-    public @NotNull boolean shareMood(String token, Mood mood) {
-        return false;
+    public @NotNull void shareMood(String token, Mood mood) {
+        this.moodService.share(token, mood);
     }
 
 //    @GetMapping

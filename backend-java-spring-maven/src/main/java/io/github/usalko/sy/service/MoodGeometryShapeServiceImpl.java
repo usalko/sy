@@ -1,6 +1,6 @@
 package io.github.usalko.sy.service;
 
-import io.github.usalko.sy.model.MoodGeometryShape;
+import io.github.usalko.sy.model.OwnMoodGeometryShape;
 import io.github.usalko.sy.repository.MoodGeometryShapeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ public class MoodGeometryShapeServiceImpl implements MoodGeometryShapeService {
     }
 
     @Override
-    public MoodGeometryShape create(MoodGeometryShape orderGeometryShape) {
+    public OwnMoodGeometryShape create(OwnMoodGeometryShape orderGeometryShape) {
         return this.orderGeometryShapeRepository.save(orderGeometryShape);
     }
 }

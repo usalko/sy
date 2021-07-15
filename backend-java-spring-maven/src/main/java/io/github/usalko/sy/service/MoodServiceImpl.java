@@ -1,7 +1,11 @@
 package io.github.usalko.sy.service;
 
 import io.github.usalko.sy.model.Mood;
-import io.github.usalko.sy.repository.MoodRepository;
+import io.github.usalko.sy.model.OwnMood;
+import io.github.usalko.sy.model.SharedMood;
+import io.github.usalko.sy.repository.OwnMoodRepository;
+import io.github.usalko.sy.repository.SharedMoodRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,26 +15,37 @@ import java.time.LocalDate;
 @Transactional
 public class MoodServiceImpl implements MoodService {
 
-    private final MoodRepository moodRepository;
+    private final SharedMoodRepository sharedMoodRepository;
 
-    public MoodServiceImpl(MoodRepository moodRepository) {
-        this.moodRepository = moodRepository;
+    private final OwnMoodRepository ownMoodRepository;
+
+    public MoodServiceImpl(SharedMoodRepository sharedMoodRepository, OwnMoodRepository ownMoodRepository) {
+        this.sharedMoodRepository = sharedMoodRepository;
+        this.ownMoodRepository = ownMoodRepository;
     }
 
     @Override
-    public Iterable<Mood> getAllMoods() {
-        return this.moodRepository.findAll();
+    public Iterable<? extends Mood> getSharedMoods(int limit) {
+        return this.sharedMoodRepository.findAll();
     }
 
     @Override
-    public Mood create(Mood mood) {
+    public Iterable<? extends Mood> getOwnMoods(String token, int limit) {
+        return this.ownMoodRepository.findAll(Pageable.ofSize(limit));
+    }
+
+    @Override
+    public Mood share(String token, Mood mood) {
         mood.setDateCreated(LocalDate.now());
+        // TODO: create reference to token
 
-        return this.moodRepository.save(mood);
+        return this.sharedMoodRepository.save((SharedMood) mood);
     }
 
     @Override
-    public void update(Mood mood) {
-        this.moodRepository.save(mood);
+    public void keep(String token, Mood mood) {
+        // TODO: create reference to token
+
+        this.ownMoodRepository.save((OwnMood) mood);
     }
 }

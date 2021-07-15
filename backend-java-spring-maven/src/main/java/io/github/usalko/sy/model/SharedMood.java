@@ -1,12 +1,34 @@
 package io.github.usalko.sy.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "shared_moods")
 public class SharedMood extends Mood {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @OneToMany(mappedBy = "pk.sharedMood")
+    @Valid
+    private List<SharedMoodGeometryShape> sharedMoodGeometryShapes = new ArrayList<>();
+
+    public SharedMood(Long id,
+                      @NotNull(message = "Parent geometry form is required.") GeometryShape geometryShape) {
+        this.setId(id);
+        this.setGeometryShape(geometryShape);
+    }
+
+    public SharedMood() {
+    }
+
+    @Override
+    public List<SharedMoodGeometryShape> getMoodGeometryShapes() {
+        return sharedMoodGeometryShapes;
+    }
+
+    public void setMoodGeometryShapes(List<SharedMoodGeometryShape> sharedMoodGeometryShapes) {
+        this.sharedMoodGeometryShapes = sharedMoodGeometryShapes;
+    }
 }

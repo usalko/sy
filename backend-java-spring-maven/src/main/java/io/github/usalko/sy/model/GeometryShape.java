@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "geometry_shapes",
         uniqueConstraints = @UniqueConstraint(columnNames = {"mnemonic"}))
-public class GeometryShape extends Mood {
+public class GeometryShape {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

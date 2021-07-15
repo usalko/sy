@@ -2,20 +2,26 @@ package io.github.usalko.sy.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.OneToMany;
-import javax.validation.Valid;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
+@MappedSuperclass
 public abstract class Mood {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateCreated;
 
-    @OneToMany(mappedBy = "pk.mood")
-    @Valid
-    private List<MoodGeometryShape> moodGeometryShapes = new ArrayList<>();
+    @NotNull(message = "Parent geometry form is required.")
+    @Basic(optional = false)
+    @ManyToOne
+    @JoinColumn(name = "geometry_shape_id")
+    private GeometryShape geometryShape;
 
     public LocalDate getDateCreated() {
         return dateCreated;
@@ -25,11 +31,22 @@ public abstract class Mood {
         this.dateCreated = dateCreated;
     }
 
-    public List<MoodGeometryShape> getMoodGeometryShapes() {
-        return moodGeometryShapes;
+    public GeometryShape getGeometryShape() {
+        return geometryShape;
     }
 
-    public void setMoodGeometryShapes(List<MoodGeometryShape> moodGeometryShapes) {
-        this.moodGeometryShapes = moodGeometryShapes;
+    public void setGeometryShape(GeometryShape geometryShape) {
+        this.geometryShape = geometryShape;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public abstract List<? extends MoodGeometryShape> getMoodGeometryShapes();
+
 }

@@ -11,25 +11,25 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "mood")
-public class MoodGeometryShapePK implements Serializable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "sharedMood")
+public class SharedMoodGeometryShapePK implements Serializable {
 
-    private static final long serialVersionUID = 2905877973939653593L;
+    private static final long serialVersionUID = 5093828689028487784L;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "mood_id")
-    private Mood mood;
+    @JoinColumn(name = "shared_mood_id")
+    private SharedMood sharedMood;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "geometry_shape_id")
     private GeometryShape geometryShape;
 
-    public Mood getMood() {
-        return mood;
+    public SharedMood getSharedMood() {
+        return sharedMood;
     }
 
-    public void setMood(Mood mood) {
-        this.mood = mood;
+    public void setSharedMood(SharedMood sharedMood) {
+        this.sharedMood = sharedMood;
     }
 
     public GeometryShape getGeometryShape() {
@@ -48,12 +48,13 @@ public class MoodGeometryShapePK implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MoodGeometryShapePK that = (MoodGeometryShapePK) o;
-        return mood.equals(that.mood) && geometryShape.equals(that.geometryShape);
+        SharedMoodGeometryShapePK that = (SharedMoodGeometryShapePK) o;
+        return Objects.equals(sharedMood, that.sharedMood) &&
+                Objects.equals(geometryShape, that.geometryShape);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mood, geometryShape);
+        return Objects.hash(sharedMood, geometryShape);
     }
 }
