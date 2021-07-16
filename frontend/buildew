@@ -45,7 +45,9 @@ fi
 if [ "x$COMMAND" == "xdev" ]; then
     echo 'Restore flutter for development'
     sudo rm -fr build
+    sudo rm -fr .dart_tool
     flutter upgrade --force
+    flutter clean
     flutter pub get
     export PUB_CACHE=~/.pub-cache
 fi

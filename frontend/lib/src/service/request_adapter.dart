@@ -3,19 +3,32 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/mood.dart';
+import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 
 final INTEGRATION_TEST_MODE =
     const bool.fromEnvironment('INTEGRATION_TEST_MODE', defaultValue: false);
 
+class HttpClient extends BrowserClient {
+  HttpClient();
+
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    return super.send(request).then((response) {
+       return response;
+    });
+  }
+}
+
 class RequestAdapter {
+  static final _client = RetryClient(BrowserClient());
   const RequestAdapter();
 
   Future<http.Response> request(Uri url, {Map<String, String>? headers}) {
     if (INTEGRATION_TEST_MODE) {
       return integrationTestSupport(url, headers);
     }
-    return http.get(url, headers: headers);
+    return _client.get(url, headers: headers);
   }
 
   Future<http.Response> integrationTestSupport(
