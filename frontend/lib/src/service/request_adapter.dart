@@ -10,16 +10,6 @@ import 'package:http/retry.dart';
 final INTEGRATION_TEST_MODE =
     const bool.fromEnvironment('INTEGRATION_TEST_MODE', defaultValue: false);
 
-class HttpClient extends BrowserClient {
-  HttpClient();
-
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    return super.send(request).then((response) {
-       return response;
-    });
-  }
-}
-
 class RequestAdapter {
   static final _client = RetryClient(BrowserClient());
   const RequestAdapter();
