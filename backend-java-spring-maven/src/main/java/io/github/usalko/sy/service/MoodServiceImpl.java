@@ -35,17 +35,20 @@ public class MoodServiceImpl implements MoodService {
     }
 
     @Override
-    public Mood share(String token, Mood mood) {
-        mood.setDateCreated(LocalDate.now());
-        // TODO: create reference to token
+    public void share(String token, SharedMood sharedMood) {
+        if (sharedMood.getDateCreated() == null) {
+            sharedMood.setDateCreated(LocalDate.now());
+        }
 
-        return this.sharedMoodRepository.save((SharedMood) mood);
+        this.sharedMoodRepository.save(sharedMood);
     }
 
     @Override
-    public void keep(String token, Mood mood) {
-        // TODO: create reference to token
+    public void keep(String token, OwnMood mood) {
+        if (mood.getDateCreated() == null) {
+            mood.setDateCreated(LocalDate.now());
+        }
 
-        this.ownMoodRepository.save((OwnMood) mood);
+        this.ownMoodRepository.save(mood);
     }
 }

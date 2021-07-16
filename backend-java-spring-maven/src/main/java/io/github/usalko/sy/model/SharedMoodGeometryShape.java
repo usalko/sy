@@ -2,13 +2,11 @@ package io.github.usalko.sy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "shared_mood_geometry_shape")
 public class SharedMoodGeometryShape extends MoodGeometryShape {
     @EmbeddedId
     @JsonIgnore

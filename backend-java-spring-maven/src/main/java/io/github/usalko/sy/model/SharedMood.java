@@ -1,5 +1,7 @@
 package io.github.usalko.sy.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -12,7 +14,7 @@ public class SharedMood extends Mood {
 
     @OneToMany(mappedBy = "pk.sharedMood")
     @Valid
-    private List<SharedMoodGeometryShape> sharedMoodGeometryShapes = new ArrayList<>();
+    private List<SharedMoodGeometryShape> moodGeometryShapes = new ArrayList<>();
 
     public SharedMood(Long id,
                       @NotNull(message = "Parent geometry form is required.") GeometryShape geometryShape) {
@@ -25,10 +27,11 @@ public class SharedMood extends Mood {
 
     @Override
     public List<SharedMoodGeometryShape> getMoodGeometryShapes() {
-        return sharedMoodGeometryShapes;
+        return moodGeometryShapes;
     }
 
     public void setMoodGeometryShapes(List<SharedMoodGeometryShape> sharedMoodGeometryShapes) {
-        this.sharedMoodGeometryShapes = sharedMoodGeometryShapes;
+        this.moodGeometryShapes = sharedMoodGeometryShapes;
     }
+
 }
