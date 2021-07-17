@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/src/component/mood_card_widget.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
@@ -39,13 +40,13 @@ class _MoodWidgetState extends State<MoodWidget> {
     var size = MediaQuery.of(context).size;
 
     if (widget.viewModeService.Screen == TheScreen.Screen1) {
-      var cardWidth = size.width / 3 - 10;
+      var cardWidth = size.width / 3 - 30;
       cards = [
         GestureDetector(
           onTap: () => setState(() {
             this.widget.viewModeService.Screen = TheScreen.Screen2Triangle;
           }),
-          child: Card(
+          child: MoodCardWidget(
             child: TriangleWidget(
               width: cardWidth,
               color: Theme.of(context).dividerColor,
@@ -56,7 +57,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           onTap: () => setState(() {
             this.widget.viewModeService.Screen = TheScreen.Screen2Square;
           }),
-          child: Card(
+          child: MoodCardWidget(
             child: SquareWidget(
               width: cardWidth,
               color: Theme.of(context).dividerColor,
@@ -67,7 +68,7 @@ class _MoodWidgetState extends State<MoodWidget> {
           onTap: () => setState(() {
             this.widget.viewModeService.Screen = TheScreen.Screen2Circle;
           }),
-          child: Card(
+          child: MoodCardWidget(
             child: CircleWidget(
               width: cardWidth,
               color: Theme.of(context).dividerColor,
@@ -80,7 +81,7 @@ class _MoodWidgetState extends State<MoodWidget> {
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Triangle),
-        Card(
+        MoodCardWidget(
           child: TriangleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
@@ -94,7 +95,7 @@ class _MoodWidgetState extends State<MoodWidget> {
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Square),
-        Card(
+        MoodCardWidget(
           child: SquareWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
@@ -108,7 +109,7 @@ class _MoodWidgetState extends State<MoodWidget> {
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Circle),
-        Card(
+        MoodCardWidget(
           child: CircleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
