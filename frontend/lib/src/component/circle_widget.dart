@@ -88,16 +88,16 @@ class CirclePainter extends CustomPainter {
 }
 
 class CircleWidget extends StatelessWidget {
-  double width;
-  Color color;
-  bool showGrid;
-  bool showBorder;
-  List<Geometry?>? content;
+  final double width;
+  final Color color;
+  final bool showGrid;
+  final bool showBorder;
+  final List<Geometry?>? content;
 
   CircleWidget(
       {required this.width,
       this.color = Colors.white,
-      this.content = null,
+      this.content,
       this.showBorder = true,
       this.showGrid = false});
 

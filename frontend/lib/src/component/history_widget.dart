@@ -77,11 +77,11 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       }
     });
 
-    if (this.widget.viewModeService.Screen == TheScreen.Screen1) {
+    if (this.widget.viewModeService.screen == TheScreen.Screen1) {
       return Column(
         children: <Widget>[
           Flexible(
-            child: getHistory(context, this.widget.viewModeService.Screen),
+            child: getHistory(context, this.widget.viewModeService.screen),
           )
         ],
       );
@@ -112,7 +112,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
               child: Container(
                 key: this.listViewKey,
                 alignment: Alignment.center,
-                child: getHistory(context, this.widget.viewModeService.Screen),
+                child: getHistory(context, this.widget.viewModeService.screen),
               ),
             ),
           );

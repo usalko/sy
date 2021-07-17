@@ -2,14 +2,21 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/src/component/i_color_picker.dart';
 import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
+import 'package:collection/collection.dart';
+import 'package:frontend/src/model/index_mark.dart';
 
 class SquarePainter extends CustomPainter {
   Color color;
   bool showGrid;
   bool showBorder;
   List<Geometry?>? content;
+
+  // Index stuff
+  Size? _size;
+  List<List<Offset>>? _index;
 
   SquarePainter(
       {required this.color,
@@ -54,6 +61,10 @@ class SquarePainter extends CustomPainter {
           Offset(squareSide, squareSide * 2 / 3) + topLeft, paint1);
     }
 
+    // Revalidate index
+    if (this._size != size) {
+      _invalidateIndex(size);
+    }
     // Draw content
     if (content != null) {
       var nineCenters = getNineCenters(size);
@@ -95,6 +106,25 @@ class SquarePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 
   List<Offset> getNineCenters(Size size) {
+
+    return [
+      this._index![0].reduce((a, b) => a + b) / 4,
+      this._index![1].reduce((a, b) => a + b) / 4,
+      this._index![2].reduce((a, b) => a + b) / 4,
+      this._index![3].reduce((a, b) => a + b) / 4,
+      this._index![4].reduce((a, b) => a + b) / 4,
+      this._index![5].reduce((a, b) => a + b) / 4,
+      this._index![6].reduce((a, b) => a + b) / 4,
+      this._index![7].reduce((a, b) => a + b) / 4,
+      this._index![8].reduce((a, b) => a + b) / 4,
+    ];
+  }
+
+  int? index(Offset localPosition) {
+    return this._index!.asMap().entries.firstWhereOrNull((e) => _inShape(localPosition, e.value))?.key;
+  }
+
+  void _invalidateIndex(Size size) {
     var squareSide = min(size.width, size.height);
     var topLeft =
         Offset((size.width - squareSide) / 2, (size.height - squareSide) / 2);
@@ -118,46 +148,103 @@ class SquarePainter extends CustomPainter {
     var p15 = Offset(squareSide * 2 / 3, squareSide) + topLeft;
     var p16 = Offset(squareSide, squareSide) + topLeft;
 
-    return [
-      (p0 + p1 + p5 + p6) / 4,
-      (p1 + p2 + p6 + p7) / 4,
-      (p2 + p3 + p7 + p8) / 4,
-      (p5 + p6 + p9 + p10) / 4,
-      (p6 + p7 + p10 + p11) / 4,
-      (p7 + p8 + p11 + p12) / 4,
-      (p9 + p10 + p13 + p14) / 4,
-      (p10 + p11 + p14 + p15) / 4,
-      (p11 + p12 + p15 + p16) / 4,
+    this._index = [
+      [p0, p1, p5, p6],
+      [p1, p2, p6, p7],
+      [p2, p3, p7, p8],
+      [p5, p6, p9, p10],
+      [p6, p7, p10, p11],
+      [p7, p8, p11, p12],
+      [p9, p10, p13, p14],
+      [p10, p11, p14, p15],
+      [p11, p12, p15, p16],
     ];
+
+    this._size = size;
+  }
+
+  bool _inShape(Offset point, List<Offset> value) {
+    var p0 = value[0];
+    var p3 = value[3];
+    return p0.dx <= point.dx &&
+      p3.dx >= point.dx &&
+      p0.dy <= point.dy &&
+      p3.dy >= point.dy;
   }
 }
 
-class SquareWidget extends StatelessWidget {
+class MutableSquareWidget extends StatefulWidget {
   final double width;
   final Color color;
   final bool showGrid;
   final bool showBorder;
+  final IColorPicker colorPicker;
   final List<Geometry?>? content;
 
-  SquareWidget(
+  MutableSquareWidget(
       {required this.width,
       this.color = Colors.white,
+      required this.colorPicker,
       this.content,
       this.showBorder = true,
       this.showGrid = false});
 
   @override
+  _MutableSquareWidgetState createState() => _MutableSquareWidgetState();
+}
+
+class _MutableSquareWidgetState extends State<MutableSquareWidget> {
+  GeometryShape shape = GeometryShape.Square;
+  IndexMark? _indexMark;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: this.width,
-      width: this.width,
-      child: CustomPaint(
-        painter: SquarePainter(
-            color: this.color,
-            content: this.content,
-            showBorder: this.showBorder,
-            showGrid: this.showGrid),
-      ),
-    );
+    var squarePainter = SquarePainter(
+        color: this.widget.color,
+        content: this.widget.content,
+        showBorder: this.widget.showBorder,
+        showGrid: this.widget.showGrid);
+    return GestureDetector(
+        onTapDown: (details) {
+          var contentIndex = squarePainter.index(details.localPosition);
+          if (contentIndex != null && widget.content != null) {
+            _updateContent(contentIndex);
+            this.setState(() {});
+          }
+        },
+        child: Container(
+            height: this.widget.width,
+            width: this.widget.width,
+            child: CustomPaint(
+              painter: squarePainter,
+            )));
+  }
+
+  void _updateContent(int contentIndex) {
+    var indexMark = IndexMark.of(contentIndex);
+    if (_indexMark != indexMark) {
+      this.shape = GeometryShape.Square;
+      this._indexMark = indexMark;
+    }
+    var content = this.widget.content!;
+    for (var i = content.length - 1; i < contentIndex - 1; i++) {
+      content.add(null);
+    }
+      var geometry = Geometry(this.shape, this.widget.colorPicker.color().value);
+    if (contentIndex >= content.length) {
+      content.add(geometry);
+    } else {
+      content[contentIndex] = geometry;
+    }
+
+    // Select next shape
+    this._indexMark!.incrementCount();
+    if (this._indexMark!.count % 3 == 0) {
+      this.shape = GeometryShape.Square;
+    } else if (this._indexMark!.count % 3 == 1) {
+      this.shape = GeometryShape.Circle;
+    } else if (this._indexMark!.count % 3 == 2) {
+      this.shape = GeometryShape.Triangle;
+    }
   }
 }

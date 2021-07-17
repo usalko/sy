@@ -74,11 +74,11 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
       }
     });
 
-    if (this.widget.viewModeService.Screen == TheScreen.Screen1) {
+    if (this.widget.viewModeService.screen == TheScreen.Screen1) {
       return Column(
         children: <Widget>[
           Flexible(
-            child: getSharedMoods(context, this.widget.viewModeService.Screen),
+            child: getSharedMoods(context, this.widget.viewModeService.screen),
           )
         ],
       );
@@ -114,7 +114,7 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
                 key: this.listViewKey,
                 alignment: Alignment.center,
                 child:
-                    getSharedMoods(context, this.widget.viewModeService.Screen),
+                    getSharedMoods(context, this.widget.viewModeService.screen),
               ),
             ),
           );
