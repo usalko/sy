@@ -49,7 +49,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
     });
 
     this.history =
-        this.widget.moodService.getHistory(this.widget.moodService.Token);
+        this.widget.moodService.getHistory(this.widget.moodService.token);
 
     super.initState();
   }
@@ -123,7 +123,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
   }
 
   Widget getHistory(BuildContext context, TheScreen? screen) {
-    if (this.widget.moodService.IsApiDisabled) {
+    if (this.widget.moodService.isApiDisabled) {
       return ApiIsDisabledWidget();
     }
 
@@ -143,7 +143,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
             children: snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
           );
         } else if (snapshot.hasError) {
-          if (this.widget.moodService.IsApiDisabled) {
+          if (this.widget.moodService.isApiDisabled) {
             return ApiIsDisabledWidget();
           }
           return ErrorMessageWidget("${snapshot.error}");

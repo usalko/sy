@@ -26,7 +26,7 @@ public class MoodServiceImpl implements MoodService {
 
     @Override
     public Iterable<? extends Mood> getSharedMoods(int limit) {
-        return this.sharedMoodRepository.findAll();
+        return this.sharedMoodRepository.findAll(Pageable.ofSize(limit));
     }
 
     @Override

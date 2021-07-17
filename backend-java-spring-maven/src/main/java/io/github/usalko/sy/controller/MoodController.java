@@ -23,7 +23,9 @@ public class MoodController {
     MoodService moodService;
     MoodGeometryShapeService moodGeometryShapeService;
 
-    public MoodController(GeometryShapeService geometryShapeService, MoodService moodService, MoodGeometryShapeService moodGeometryShapeService) {
+    public MoodController(GeometryShapeService geometryShapeService,
+                          MoodService moodService,
+                          MoodGeometryShapeService moodGeometryShapeService) {
         this.geometryShapeService = geometryShapeService;
         this.moodService = moodService;
         this.moodGeometryShapeService = moodGeometryShapeService;

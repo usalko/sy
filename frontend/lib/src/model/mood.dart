@@ -10,7 +10,7 @@ class Mood {
   GeometryShape kind;
   List<Geometry?> content;
 
-  Mood(this.id, this.kind, this.content, {this.created = null});
+  Mood(this.id, this.kind, this.content, {this.created});
 
   factory Mood.fromJson(Map<String, dynamic> json) {
     return Mood(

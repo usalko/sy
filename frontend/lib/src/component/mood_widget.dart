@@ -179,8 +179,8 @@ class _MoodWidgetState extends State<MoodWidget> {
                     children: [
                       IconButton(
                         onPressed: () async {
-                          if (await this.widget.moodService.ShareMood(
-                              this.widget.moodService.Token, this.mood!)) {
+                          if (await this.widget.moodService.shareMood(
+                              this.widget.moodService.token, this.mood!)) {
                             setState(() {
                               this.widget.viewModeService.Screen =
                                   TheScreen.Screen1;
@@ -206,8 +206,8 @@ class _MoodWidgetState extends State<MoodWidget> {
                     padding: const EdgeInsets.only(right: 16),
                     child: IconButton(
                       onPressed: () async {
-                        if (await this.widget.moodService.KeepMoodForNow(
-                            this.widget.moodService.Token, this.mood!)) {
+                        if (await this.widget.moodService.keepMoodForNow(
+                            this.widget.moodService.token, this.mood!)) {
                           setState(() {
                             this.widget.viewModeService.Screen =
                                 TheScreen.Screen1;

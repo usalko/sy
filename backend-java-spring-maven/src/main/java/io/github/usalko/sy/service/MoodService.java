@@ -14,7 +14,7 @@ public interface MoodService {
     @NotNull Iterable<? extends Mood> getSharedMoods(int limit);
 
     @NotNull Iterable<? extends Mood> getOwnMoods(@NotNull(message = "The token cannot be null.") String token,
-                                           int limit);
+                                                  int limit);
 
     void share(@NotNull(message = "The token cannot be null.") String token,
                @NotNull(message = "The mood cannot be null.") @Valid SharedMood mood);

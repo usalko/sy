@@ -125,7 +125,7 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
   }
 
   Widget getSharedMoods(BuildContext context, TheScreen? screen) {
-    if (this.widget.moodService.IsApiDisabled) {
+    if (this.widget.moodService.isApiDisabled) {
       return ApiIsDisabledWidget();
     }
 
@@ -150,7 +150,7 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
             children: snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
           );
         } else if (snapshot.hasError) {
-          if (this.widget.moodService.IsApiDisabled) {
+          if (this.widget.moodService.isApiDisabled) {
             return ApiIsDisabledWidget();
           }
           return ErrorMessageWidget("${snapshot.error}");
