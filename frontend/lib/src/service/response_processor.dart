@@ -31,13 +31,16 @@ class ResponseProcessor {
     result['created'] = element['dateCreated'];
     result['kind'] = element['geometryShape']?['mnemonic'];
     result['content'] = element['moodGeometryShapes']
-        ?.map((e) => processGeometryForSpringPlatform(e))
+        ?.map((e) => processGeometryForSpringPlatform(e),)
         .toList();
     return result;
   }
 
-  Map<String, dynamic> processGeometryForSpringPlatform(
-      Map<String, dynamic> element) {
+  Map<String, dynamic>? processGeometryForSpringPlatform(
+      Map<String, dynamic>? element) {
+    if (element == null) {
+      return null;
+    }
     var result = Map<String, dynamic>();
     result['shape'] = element['geometryShape']?['mnemonic'];
     result['color'] = (element['color'] as int).toUnsigned(32);

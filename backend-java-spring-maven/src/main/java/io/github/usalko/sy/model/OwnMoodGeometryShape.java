@@ -3,7 +3,9 @@ package io.github.usalko.sy.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
@@ -14,23 +16,42 @@ public class OwnMoodGeometryShape extends MoodGeometryShape {
     @ApiModelProperty(hidden = true)
     private OwnMoodGeometryShapePK pk;
 
-    @Column(nullable = false)
-    private Integer color;
-
     public OwnMoodGeometryShape() {
         super();
+        pk = new OwnMoodGeometryShapePK();
     }
 
-    public OwnMoodGeometryShape(OwnMood ownMood, GeometryShape geometry, Integer color) {
+    public OwnMoodGeometryShape(OwnMood ownMood, GeometryShape geometry, Integer color, Integer index) {
         pk = new OwnMoodGeometryShapePK();
         pk.setOwnMood(ownMood);
         pk.setGeometryShape(geometry);
-        this.color = color;
+        this.setColor(color);
+        pk.setIndex(index);
     }
 
-    @Transient
+    @Override
+    public void setMood(Mood<? extends MoodGeometryShape> mood) {
+        this.pk.setOwnMood((OwnMood) mood);
+    }
+
+    @Override
+    public Integer getIndex() {
+        return this.pk.getIndex();
+    }
+
+    @Override
+    public void setIndex(Integer index) {
+        this.pk.setIndex(index);
+    }
+
+    @Override
     public GeometryShape getGeometryShape() {
         return this.pk.getGeometryShape();
+    }
+
+    @Override
+    public void setGeometryShape(GeometryShape geometryShape) {
+        this.pk.setGeometryShape(geometryShape);
     }
 
     public OwnMoodGeometryShapePK getPk() {
@@ -39,14 +60,6 @@ public class OwnMoodGeometryShape extends MoodGeometryShape {
 
     public void setPk(OwnMoodGeometryShapePK pk) {
         this.pk = pk;
-    }
-
-    public Integer getColor() {
-        return color;
-    }
-
-    public void setColor(Integer color) {
-        this.color = color;
     }
 
     @Override
@@ -59,11 +72,11 @@ public class OwnMoodGeometryShape extends MoodGeometryShape {
         }
         OwnMoodGeometryShape that = (OwnMoodGeometryShape) o;
         return Objects.equals(pk, that.pk) &&
-                Objects.equals(color, that.color);
+                Objects.equals(getColor(), that.getColor());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pk, color);
+        return Objects.hash(pk, getColor());
     }
 }

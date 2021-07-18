@@ -1,6 +1,5 @@
 package io.github.usalko.sy.service;
 
-import io.github.usalko.sy.model.Mood;
 import io.github.usalko.sy.model.OwnMood;
 import io.github.usalko.sy.model.SharedMood;
 import io.github.usalko.sy.repository.OwnMoodRepository;
@@ -25,12 +24,12 @@ public class MoodServiceImpl implements MoodService {
     }
 
     @Override
-    public Iterable<? extends Mood> getSharedMoods(int limit) {
+    public Iterable<SharedMood> getSharedMoods(int limit) {
         return this.sharedMoodRepository.findAll(Pageable.ofSize(limit));
     }
 
     @Override
-    public Iterable<? extends Mood> getOwnMoods(String token, int limit) {
+    public Iterable<OwnMood> getOwnMoods(String token, int limit) {
         return this.ownMoodRepository.findAll(Pageable.ofSize(limit));
     }
 

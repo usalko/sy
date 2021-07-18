@@ -1,7 +1,6 @@
 package io.github.usalko.sy.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @MappedSuperclass
-public abstract class Mood {
+public abstract class Mood<T extends MoodGeometryShape> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +47,7 @@ public abstract class Mood {
         this.id = id;
     }
 
-    public abstract List<? extends MoodGeometryShape> getMoodGeometryShapes();
+    public abstract List<T> getMoodGeometryShapes();
 
+    public abstract void setMoodGeometryShapes(List<T> result);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "own_moods")
-public class OwnMood extends Mood {
+public class OwnMood extends Mood<OwnMoodGeometryShape> {
 
     @OneToMany(mappedBy = "pk.ownMood")
     @Valid

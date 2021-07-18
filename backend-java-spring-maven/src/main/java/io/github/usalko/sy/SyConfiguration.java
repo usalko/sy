@@ -8,8 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SyConfiguration {
     @Bean
-    public HttpTraceRepository htttpTraceRepository()
-    {
+    public HttpTraceRepository httpTraceRepository() {
         return new InMemoryHttpTraceRepository();
     }
 }

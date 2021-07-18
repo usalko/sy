@@ -20,9 +20,11 @@ public class SharedMoodGeometryShapePK implements Serializable {
     @JoinColumn(name = "shared_mood_id")
     private SharedMood sharedMood;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "geometry_shape_id")
     private GeometryShape geometryShape;
+
+    private Integer index;
 
     public SharedMood getSharedMood() {
         return sharedMood;
@@ -40,6 +42,14 @@ public class SharedMoodGeometryShapePK implements Serializable {
         this.geometryShape = geometryShape;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -50,11 +60,12 @@ public class SharedMoodGeometryShapePK implements Serializable {
         }
         SharedMoodGeometryShapePK that = (SharedMoodGeometryShapePK) o;
         return Objects.equals(sharedMood, that.sharedMood) &&
-                Objects.equals(geometryShape, that.geometryShape);
+                Objects.equals(geometryShape, that.geometryShape) &&
+                Objects.equals(index, that.index);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sharedMood, geometryShape);
+        return Objects.hash(sharedMood, geometryShape, index);
     }
 }

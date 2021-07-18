@@ -67,7 +67,7 @@ class MoodService {
       return Future.value(false);
     }
     final response = await MoodServiceAdapter().post(
-        Uri.parse('$API_ENDPOINT/KeepMoodForNow?token=$token'),
+        Uri.parse('$API_ENDPOINT/ShareMood?token=$token'),
         body: mood);
     if (response.statusCode == 200) {
       return true;

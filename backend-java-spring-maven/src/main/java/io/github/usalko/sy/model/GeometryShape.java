@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Cacheable
 @Table(name = "geometry_shapes",
         uniqueConstraints = @UniqueConstraint(columnNames = {"mnemonic"}))
 public class GeometryShape {

@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 @Validated
 public interface MoodGeometryShapeService {
 
-    OwnMoodGeometryShape create(@NotNull(message = "The geometry shapes for mood cannot be null.") @Valid OwnMoodGeometryShape ownMoodGeometryShape);
+    void create(@NotNull(message = "The geometry shapes for mood cannot be null.") @Valid OwnMoodGeometryShape ownMoodGeometryShape);
 
-    SharedMoodGeometryShape create(@NotNull(message = "The geometry shapes for mood cannot be null.") @Valid SharedMoodGeometryShape sharedMoodGeometryShape);
+    void create(@NotNull(message = "The geometry shapes for mood cannot be null.") @Valid SharedMoodGeometryShape sharedMoodGeometryShape);
 
 }

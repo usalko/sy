@@ -21,12 +21,12 @@ public class MoodGeometryShapeServiceImpl implements MoodGeometryShapeService {
     }
 
     @Override
-    public OwnMoodGeometryShape create(OwnMoodGeometryShape ownMoodGeometryShape) {
-        return this.ownMoodGeometryShapeRepository.save(ownMoodGeometryShape);
+    public void create(OwnMoodGeometryShape ownMoodGeometryShape) {
+        this.ownMoodGeometryShapeRepository.save(ownMoodGeometryShape);
     }
 
     @Override
-    public SharedMoodGeometryShape create(SharedMoodGeometryShape sharedMoodGeometryShape) {
-        return this.sharedMoodGeometryShapeRepository.save(sharedMoodGeometryShape);
+    public void create(SharedMoodGeometryShape sharedMoodGeometryShape) {
+        this.sharedMoodGeometryShapeRepository.save(sharedMoodGeometryShape);
     }
 }

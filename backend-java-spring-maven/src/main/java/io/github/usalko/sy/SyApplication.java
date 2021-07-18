@@ -33,12 +33,8 @@ public class SyApplication {
             // Own mood sample
             OwnMood ownMood = new OwnMood();
             ownMood.setGeometryShape(new GeometryShape(1L, "triangle"));
-            OwnMoodGeometryShape ownMoodGeometryShape = new OwnMoodGeometryShape();
-            ownMoodGeometryShape.setColor(0);
-            OwnMoodGeometryShapePK ownMoodGeometryShapePK = new OwnMoodGeometryShapePK();
-            ownMoodGeometryShapePK.setGeometryShape(new GeometryShape(1L, "triangle"));
-            ownMoodGeometryShapePK.setOwnMood(ownMood);
-            ownMoodGeometryShape.setPk(ownMoodGeometryShapePK);
+            OwnMoodGeometryShape ownMoodGeometryShape = new OwnMoodGeometryShape(ownMood,
+                    new GeometryShape(1L, "triangle"), 0, 0);
             ownMood.setMoodGeometryShapes(Collections.singletonList(ownMoodGeometryShape));
             moodService.keep("1", ownMood);
             moodGeometryShapeService.create(ownMoodGeometryShape);
@@ -46,12 +42,8 @@ public class SyApplication {
             // Shared mood sample
             SharedMood sharedMood = new SharedMood();
             sharedMood.setGeometryShape(new GeometryShape(1L, "circle"));
-            SharedMoodGeometryShape sharedMoodGeometryShape = new SharedMoodGeometryShape();
-            sharedMoodGeometryShape.setColor(0);
-            SharedMoodGeometryShapePK sharedMoodGeometryShapePK = new SharedMoodGeometryShapePK();
-            sharedMoodGeometryShapePK.setGeometryShape(new GeometryShape(1L, "circle"));
-            sharedMoodGeometryShapePK.setSharedMood(sharedMood);
-            sharedMoodGeometryShape.setPk(sharedMoodGeometryShapePK);
+            SharedMoodGeometryShape sharedMoodGeometryShape = new SharedMoodGeometryShape(sharedMood,
+                    new GeometryShape(1L, "circle"), 0, 0);
             sharedMood.setMoodGeometryShapes(Collections.singletonList(sharedMoodGeometryShape));
             moodService.share("1", sharedMood);
             moodGeometryShapeService.create(sharedMoodGeometryShape);
