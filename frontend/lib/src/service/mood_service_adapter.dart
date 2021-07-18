@@ -3,22 +3,31 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/mood.dart';
+import 'package:frontend/src/service/request_processor.dart';
 import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
-final INTEGRATION_TEST_MODE =
+const INTEGRATION_TEST_MODE =
     const bool.fromEnvironment('INTEGRATION_TEST_MODE', defaultValue: false);
 
-class RequestAdapter {
+class MoodServiceAdapter {
   static final _client = RetryClient(BrowserClient());
-  const RequestAdapter();
+  const MoodServiceAdapter();
 
-  Future<http.Response> request(Uri url, {Map<String, String>? headers}) {
+  Future<http.Response> get(Uri url, {Map<String, String>? headers}) {
     if (INTEGRATION_TEST_MODE) {
       return integrationTestSupport(url, headers);
     }
     return _client.get(url, headers: headers);
+  }
+
+  Future<http.Response> post(Uri url,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+    if (INTEGRATION_TEST_MODE) {
+      return integrationTestSupport(url, headers);
+    }
+    return RequestProcessor(_client).post(url, headers, body, encoding);
   }
 
   Future<http.Response> integrationTestSupport(

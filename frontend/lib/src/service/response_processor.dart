@@ -24,19 +24,23 @@ class ResponseProcessor {
         ' // http status: ${response.statusCode}');
   }
 
-  Map<String, dynamic> processMoodForSpringPlatform(Map<String, dynamic> element) {
+  Map<String, dynamic> processMoodForSpringPlatform(
+      Map<String, dynamic> element) {
     var result = Map<String, dynamic>();
     result['id'] = "${element['id']}";
     result['created'] = element['dateCreated'];
     result['kind'] = element['geometryShape']?['mnemonic'];
-    result['content'] = element['moodGeometryShapes']?.map((e) => processGeometryForSpringPlatform(e)).toList();
+    result['content'] = element['moodGeometryShapes']
+        ?.map((e) => processGeometryForSpringPlatform(e))
+        .toList();
     return result;
   }
 
-  Map<String, dynamic> processGeometryForSpringPlatform(Map<String, dynamic> element) {
+  Map<String, dynamic> processGeometryForSpringPlatform(
+      Map<String, dynamic> element) {
     var result = Map<String, dynamic>();
     result['shape'] = element['geometryShape']?['mnemonic'];
-    result['color'] = element['color'];
+    result['color'] = (element['color'] as int).toUnsigned(32);
     return result;
   }
 

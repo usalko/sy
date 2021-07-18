@@ -1,6 +1,7 @@
 package io.github.usalko.sy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import java.util.Objects;
 public class OwnMoodGeometryShape extends MoodGeometryShape {
     @EmbeddedId
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private OwnMoodGeometryShapePK pk;
 
     @Column(nullable = false)

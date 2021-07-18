@@ -4,7 +4,7 @@ import 'package:frontend/src/model/mood.dart';
 
 import 'package:event/event.dart';
 import 'package:frontend/src/model/api_disable_args.dart';
-import 'package:frontend/src/service/request_adapter.dart';
+import 'package:frontend/src/service/mood_service_adapter.dart';
 import 'package:frontend/src/service/response_processor.dart';
 
 const DEFAULT_VALUE_FOR_IS_API_DISABLED = false;
@@ -33,8 +33,8 @@ class MoodService {
     if (isApiDisabled) {
       return Future.value([]);
     }
-    final response = await RequestAdapter()
-        .request(Uri.parse('$API_ENDPOINT/GetSharedMoods'));
+    final response = await MoodServiceAdapter()
+        .get(Uri.parse('$API_ENDPOINT/GetSharedMoods'));
     return ResponseProcessor(response)
         .moodsList(errorMessage: 'Failed to load shared moods');
   }
@@ -43,8 +43,8 @@ class MoodService {
     if (isApiDisabled) {
       return Future.value([]);
     }
-    final response = await RequestAdapter()
-        .request(Uri.parse('$API_ENDPOINT/GetHistory?token=$token'));
+    final response = await MoodServiceAdapter()
+        .get(Uri.parse('$API_ENDPOINT/GetHistory?token=$token'));
     return ResponseProcessor(response)
         .moodsList(errorMessage: 'Failed to load history');
   }
@@ -53,8 +53,9 @@ class MoodService {
     if (isApiDisabled) {
       return Future.value(false);
     }
-    final response = await RequestAdapter().request(Uri.parse(
-        '$API_ENDPOINT/KeepMoodForNow?token=$token&mood=${Uri.encodeQueryComponent(json.encode(mood.toJson()))}'));
+    final response = await MoodServiceAdapter().post(
+        Uri.parse('$API_ENDPOINT/KeepMoodForNow?token=$token'),
+        body: mood);
     if (response.statusCode == 200) {
       return true;
     }
@@ -65,8 +66,9 @@ class MoodService {
     if (isApiDisabled) {
       return Future.value(false);
     }
-    final response = await RequestAdapter().request(Uri.parse(
-        '$API_ENDPOINT/ShareMood?token=$token&mood=${Uri.encodeQueryComponent(json.encode(mood.toJson()))}'));
+    final response = await MoodServiceAdapter().post(
+        Uri.parse('$API_ENDPOINT/KeepMoodForNow?token=$token'),
+        body: mood);
     if (response.statusCode == 200) {
       return true;
     }
