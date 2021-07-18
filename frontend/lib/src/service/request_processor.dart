@@ -31,7 +31,7 @@ class RequestProcessor {
   Map<String, dynamic> processMoodForSpringPlatform(Mood mood) {
     var result = Map<String, dynamic>();
     result['id'] = int.tryParse(mood.id);
-    result['dateCreated'] = mood.created;
+    result['created'] = mood.created;
     result['geometryShape'] = {'mnemonic': GeometryShapeExt.toJson(mood.kind)};
     result['moodGeometryShapes'] =
         mood.content.map((e) => processGeometryForSpringPlatform(e)).toList();

@@ -1,30 +1,35 @@
 package io.github.usalko.sy.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "tokens")
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="tokenOwnMoods")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "tokenOwnMoods")
 public class Token {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dateCreated;
+    private LocalDateTime created;
 
-    @OneToMany(mappedBy = "pk.token")
+    @OneToMany(mappedBy = "pk.token", fetch = FetchType.LAZY)
     @Valid
     private List<TokenOwnMood> tokenOwnMoods = new ArrayList<>();
+
+    public Token(String id) {
+        this.id = id;
+        this.created = LocalDateTime.now();
+    }
+
+    public Token() {
+    }
 
     public String getId() {
         return id;
@@ -34,12 +39,12 @@ public class Token {
         this.id = id;
     }
 
-    public LocalDate getDateCreated() {
-        return dateCreated;
+    public LocalDateTime getCreated() {
+        return created;
     }
 
-    public void setDateCreated(LocalDate dateCreated) {
-        this.dateCreated = dateCreated;
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     public List<TokenOwnMood> getTokenOwnMoods() {

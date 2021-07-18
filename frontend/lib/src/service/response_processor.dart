@@ -28,7 +28,7 @@ class ResponseProcessor {
       Map<String, dynamic> element) {
     var result = Map<String, dynamic>();
     result['id'] = "${element['id']}";
-    result['created'] = element['dateCreated'];
+    result['created'] = element['created'];
     result['kind'] = element['geometryShape']?['mnemonic'];
     result['content'] = element['moodGeometryShapes']
         ?.map((e) => processGeometryForSpringPlatform(e),)

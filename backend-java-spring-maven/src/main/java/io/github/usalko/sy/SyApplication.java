@@ -4,6 +4,7 @@ import io.github.usalko.sy.model.*;
 import io.github.usalko.sy.service.GeometryShapeService;
 import io.github.usalko.sy.service.MoodGeometryShapeService;
 import io.github.usalko.sy.service.MoodService;
+import io.github.usalko.sy.service.TokenService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,12 +24,15 @@ public class SyApplication {
     @Bean
     CommandLineRunner runner(GeometryShapeService geometryShapeService,
                              MoodService moodService,
-                             MoodGeometryShapeService moodGeometryShapeService) {
+                             MoodGeometryShapeService moodGeometryShapeService,
+                             TokenService tokenService) {
         return args -> {
             // Geometric shapes
             geometryShapeService.save(new GeometryShape(1L, "triangle"));
             geometryShapeService.save(new GeometryShape(2L, "square"));
             geometryShapeService.save(new GeometryShape(3L, "circle"));
+
+            Token token = tokenService.generate(0, 0);
 
             // Own mood sample
             OwnMood ownMood = new OwnMood();
@@ -36,7 +40,7 @@ public class SyApplication {
             OwnMoodGeometryShape ownMoodGeometryShape = new OwnMoodGeometryShape(ownMood,
                     new GeometryShape(1L, "triangle"), 0, 0);
             ownMood.setMoodGeometryShapes(Collections.singletonList(ownMoodGeometryShape));
-            moodService.keep("1", ownMood);
+            moodService.keep(token, ownMood);
             moodGeometryShapeService.create(ownMoodGeometryShape);
 
             // Shared mood sample
@@ -45,7 +49,7 @@ public class SyApplication {
             SharedMoodGeometryShape sharedMoodGeometryShape = new SharedMoodGeometryShape(sharedMood,
                     new GeometryShape(1L, "circle"), 0, 0);
             sharedMood.setMoodGeometryShapes(Collections.singletonList(sharedMoodGeometryShape));
-            moodService.share("1", sharedMood);
+            moodService.share(sharedMood);
             moodGeometryShapeService.create(sharedMoodGeometryShape);
         };
     }

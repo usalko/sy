@@ -4,6 +4,7 @@ import io.github.usalko.sy.model.*;
 import io.github.usalko.sy.service.GeometryShapeService;
 import io.github.usalko.sy.service.MoodGeometryShapeService;
 import io.github.usalko.sy.service.MoodService;
+import io.github.usalko.sy.service.TokenService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @CrossOrigin
@@ -22,13 +24,16 @@ public class MoodController {
     GeometryShapeService geometryShapeService;
     MoodService moodService;
     MoodGeometryShapeService moodGeometryShapeService;
+    TokenService tokenService;
 
     public MoodController(GeometryShapeService geometryShapeService,
                           MoodService moodService,
-                          MoodGeometryShapeService moodGeometryShapeService) {
+                          MoodGeometryShapeService moodGeometryShapeService,
+                          TokenService tokenService) {
         this.geometryShapeService = geometryShapeService;
         this.moodService = moodService;
         this.moodGeometryShapeService = moodGeometryShapeService;
+        this.tokenService = tokenService;
     }
 
     @GetMapping(value = {"/GetSharedMoods"})
@@ -63,8 +68,12 @@ public class MoodController {
     @GetMapping(value = {"/GetHistory"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Request your own mood history")
-    public @NotNull Iterable<OwnMood> getHistory(String token) {
-        Iterable<OwnMood> result = this.moodService.getOwnMoods(token, 50);
+    public @NotNull Iterable<OwnMood> getHistory(String token) throws IllegalAccessException {
+        Optional<Token> persistedToken = this.tokenService.getToken(token);
+        if (!persistedToken.isPresent()) {
+            throw new IllegalAccessException(String.format("Token %s is not presented in database", token));
+        }
+        Iterable<OwnMood> result = this.moodService.getOwnMoods(persistedToken.get(), 50);
         result.forEach(this::inPlaceUnpackMoodGeometryShapes);
         return result;
     }
@@ -72,9 +81,13 @@ public class MoodController {
     @PostMapping(value = {"/KeepMoodForNow"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Keep your own mood for now")
-    public @NotNull void keepMoodForNow(String token, @RequestBody OwnMood mood) {
+    public @NotNull void keepMoodForNow(String token, @RequestBody OwnMood mood) throws IllegalAccessException {
+        Optional<Token> persistedToken = this.tokenService.getToken(token);
+        if (!persistedToken.isPresent()) {
+            throw new IllegalAccessException(String.format("Token %s is not presented in database", token));
+        }
         this.geometryShapeService.restoreGeometryShapes(mood);
-        this.moodService.keep(token, mood);
+        this.moodService.keep(persistedToken.get(), mood);
         List<OwnMoodGeometryShape> moodGeometryShapes = mood.getMoodGeometryShapes();
         IntStream.range(0, moodGeometryShapes.size()).forEach(index -> {
             OwnMoodGeometryShape moodGeometryShape = moodGeometryShapes.get(index);
@@ -89,9 +102,13 @@ public class MoodController {
     @PostMapping(value = {"/ShareMood"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Share mood for everyone")
-    public @NotNull void shareMood(String token, @RequestBody SharedMood mood) {
+    public @NotNull void shareMood(String token, @RequestBody SharedMood mood) throws IllegalAccessException {
+        Optional<Token> persistedToken = this.tokenService.getToken(token);
+        if (!persistedToken.isPresent()) {
+            throw new IllegalAccessException(String.format("Token %s is not presented in database", token));
+        }
         this.geometryShapeService.restoreGeometryShapes(mood);
-        this.moodService.share(token, mood);
+        this.moodService.share(mood);
         List<SharedMoodGeometryShape> moodGeometryShapes = mood.getMoodGeometryShapes();
         IntStream.range(0, moodGeometryShapes.size()).forEach(index -> {
             SharedMoodGeometryShape moodGeometryShape = moodGeometryShapes.get(index);
