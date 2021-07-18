@@ -4,6 +4,8 @@ FROM nginx:alpine
 RUN apk add openjdk8
 
 COPY ./target/web/ /usr/share/nginx/html/
+COPY ./nginx.212 /etc/nginx/conf.d/default.conf
+
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 EXPOSE 80
