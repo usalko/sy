@@ -73,6 +73,9 @@ class _HistoryWidgetState extends State<HistoryWidget> {
           SchedulerBinding.instance?.addPostFrameCallback((_) {
             Overlay.of(context)?.insert(this.sticky!);
           });
+
+          this.history =
+              this.widget.moodService.getHistory(this.widget.moodService.token);
         });
       }
     });
@@ -87,10 +90,12 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       );
     }
     return Container(
-      key: stickyKey,
-      height: 22.0,
-      child: Text("w" * (4 * (8 + 1))), // Covered object anticipation
-    );
+        key: stickyKey,
+        height: 22.0,
+        child: SizedBox(
+          width: 60.0 * 4,
+        ) // Covered object anticipation
+        );
   }
 
   Widget stickyBuilder(BuildContext context) {
@@ -131,7 +136,6 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       future: this.history,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var size = MediaQuery.of(context).size;
           if (screen == TheScreen.Screen1) {
             return ListView(
               children:

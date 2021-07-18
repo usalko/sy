@@ -70,6 +70,8 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
           SchedulerBinding.instance?.addPostFrameCallback((_) {
             Overlay.of(context)?.insert(this.sticky!);
           });
+
+          this.sharedMoods = this.widget.moodService.getSharedMoods();
         });
       }
     });
