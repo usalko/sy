@@ -33,7 +33,7 @@ public class MoodServiceImpl implements MoodService {
 
     @Override
     public Iterable<SharedMood> getSharedMoods(int limit) {
-        return this.sharedMoodRepository.findAll(Pageable.ofSize(limit));
+        return this.sharedMoodRepository.findByOrderByIdDesc(Pageable.ofSize(limit));
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.List;
 
 //@see the different approaches in https://stackoverflow.com/questions/9314078/setmaxresults-for-spring-data-jpa-annotation
 public interface TokenOwnMoodRepository extends JpaRepository<TokenOwnMood, Long> {
-    @Query("select o.pk.ownMood from TokenOwnMood o where o.pk.token.id = :pkTokenId")
+    @Query("select o.pk.ownMood from TokenOwnMood o where o.pk.token.id = :pkTokenId order by o.pk.ownMood desc")
     List<OwnMood> findAllByPkTokenIdOrderByPkOwnMoodCreatedDesc(@Param("pkTokenId") String token,
                                                                   Pageable pageable);
 }
