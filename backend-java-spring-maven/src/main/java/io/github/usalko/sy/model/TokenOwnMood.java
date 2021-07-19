@@ -29,6 +29,11 @@ public class TokenOwnMood {
         return this.pk.getToken();
     }
 
+    @Transient
+    public OwnMood getOwnMood() {
+        return this.pk.getOwnMood();
+    }
+
     public TokenOwnMoodPK getPk() {
         return pk;
     }

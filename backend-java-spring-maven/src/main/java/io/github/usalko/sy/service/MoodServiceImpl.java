@@ -38,7 +38,8 @@ public class MoodServiceImpl implements MoodService {
 
     @Override
     public Iterable<OwnMood> getOwnMoods(Token token, int limit) {
-        return this.ownMoodRepository.findAll(Pageable.ofSize(limit));
+        return this.tokenOwnMoodRepository
+                .findAllByPkTokenIdOrderByPkOwnMoodCreatedDesc(token.getId(), Pageable.ofSize(50));
     }
 
     @Override
