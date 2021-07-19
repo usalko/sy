@@ -75,32 +75,38 @@ class TrianglePainter extends CustomPainter {
     }
     // Draw content
     if (content != null) {
-      var nineCenters = getNineCenters(size);
+      var radius = tan(30*pi/180) * squareSide / 6; // TODO: fix calculation for inscribed circle
+      var triangleBase = squareSide / 3;
+      var smallSquareSide = triangleBase * triangleBase / (triangleBase + triangleBase);
 
       var i = 0;
       content?.take(9).forEach((geometry) {
         if (geometry != null) {
-          var center = nineCenters[i];
+          var center = this._index![i].reduce((a, b) => a + b) / 3;
           var paint = Paint()
             ..color = Color(geometry.color)
             ..isAntiAlias = true
             ..style = PaintingStyle.fill;
           if (geometry.shape == GeometryShape.Triangle) {
             var path = Path();
-            path.moveTo(center.dx, center.dy - squareSide / 6);
-            path.lineTo(center.dx + squareSide / 6, center.dy + squareSide / 6);
-            path.lineTo(center.dx - squareSide / 6, center.dy + squareSide / 6);
+            var p0 = this._index![i][0];
+            var p1 = this._index![i][1];
+            var p2 = this._index![i][2];
+            path.moveTo(p0.dx, p0.dy);
+            path.lineTo(p1.dx, p1.dy);
+            path.lineTo(p2.dx, p2.dy);
             path.close();
             canvas.drawPath(path, paint);
           } else if (geometry.shape == GeometryShape.Square) {
+            var p0 = this._index![i][0];
             canvas.drawRect(
                 Rect.fromCenter(
-                    center: center,
-                    width: squareSide / 3,
-                    height: squareSide / 3),
+                    center: Offset(p0.dx, p0.dy + (p0.dy < center.dy ? 3: -3) * smallSquareSide / 2),
+                    width: smallSquareSide,
+                    height: smallSquareSide),
                 paint);
           } else if (geometry.shape == GeometryShape.Circle) {
-            canvas.drawCircle(center, squareSide / 6, paint);
+            canvas.drawCircle(center, radius, paint);
           } else {
             throw new UnimplementedError();
           }
@@ -112,20 +118,6 @@ class TrianglePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
-
-  List<Offset> getNineCenters(Size size) {
-    return [
-      this._index![0].reduce((a, b) => a + b) / 4,
-      this._index![1].reduce((a, b) => a + b) / 4,
-      this._index![2].reduce((a, b) => a + b) / 4,
-      this._index![3].reduce((a, b) => a + b) / 4,
-      this._index![4].reduce((a, b) => a + b) / 4,
-      this._index![5].reduce((a, b) => a + b) / 4,
-      this._index![6].reduce((a, b) => a + b) / 4,
-      this._index![7].reduce((a, b) => a + b) / 4,
-      this._index![8].reduce((a, b) => a + b) / 4,
-    ];
-  }
 
   int? index(Offset localPosition) {
     return this
@@ -140,36 +132,30 @@ class TrianglePainter extends CustomPainter {
     var squareSide = min(size.width, size.height);
     var topLeft =
         Offset((size.width - squareSide) / 2, (size.height - squareSide) / 2);
-    var p0 = topLeft;
-    var p1 = Offset(squareSide / 3, 0) + topLeft;
-    var p2 = Offset(squareSide * 2 / 3, 0) + topLeft;
-    var p3 = Offset(squareSide, 0) + topLeft;
+    var line1Offset = squareSide / 3;
+    var line2Offset = squareSide / 6;
 
-    var p5 = Offset(0, squareSide / 3) + topLeft;
-    var p6 = Offset(squareSide / 3, squareSide / 3) + topLeft;
-    var p7 = Offset(squareSide * 2 / 3, squareSide / 3) + topLeft;
-    var p8 = Offset(squareSide, squareSide / 3) + topLeft;
-
-    var p9 = Offset(0, squareSide * 2 / 3) + topLeft;
-    var p10 = Offset(squareSide / 3, squareSide * 2 / 3) + topLeft;
-    var p11 = Offset(squareSide * 2 / 3, squareSide * 2 / 3) + topLeft;
-    var p12 = Offset(squareSide, squareSide * 2 / 3) + topLeft;
-
-    var p13 = Offset(0, squareSide) + topLeft;
-    var p14 = Offset(squareSide / 3, squareSide) + topLeft;
-    var p15 = Offset(squareSide * 2 / 3, squareSide) + topLeft;
-    var p16 = Offset(squareSide, squareSide) + topLeft;
+    var p0 = Offset(squareSide / 2 + topLeft.dx, topLeft.dy);
+    var p1 = Offset(line1Offset, squareSide / 3) + topLeft;
+    var p2 = Offset(squareSide - line1Offset, squareSide / 3) + topLeft;
+    var p3 = Offset(line2Offset, squareSide * 2 / 3) + topLeft;
+    var p4 = Offset(squareSide / 2, squareSide * 2 / 3) + topLeft;
+    var p5 = Offset(squareSide - line2Offset, squareSide * 2 / 3) + topLeft;
+    var p6 = Offset(topLeft.dx, squareSide + topLeft.dy);
+    var p7 = Offset(squareSide / 3, squareSide) + topLeft;
+    var p8 = Offset(squareSide * 2 / 3, squareSide) + topLeft;
+    var p9 = Offset(topLeft.dx + squareSide, squareSide + topLeft.dy);
 
     this._index = [
-      [p0, p1, p5, p6],
-      [p1, p2, p6, p7],
-      [p2, p3, p7, p8],
-      [p5, p6, p9, p10],
-      [p6, p7, p10, p11],
-      [p7, p8, p11, p12],
-      [p9, p10, p13, p14],
-      [p10, p11, p14, p15],
-      [p11, p12, p15, p16],
+      [p0, p2, p1],
+      [p1, p4, p3],
+      [p4, p1, p2],
+      [p2, p5, p4],
+      [p3, p7, p6],
+      [p7, p3, p4],
+      [p4, p8, p7],
+      [p8, p4, p5],
+      [p5, p9, p8],
     ];
 
     this._size = size;
@@ -177,10 +163,19 @@ class TrianglePainter extends CustomPainter {
 
   bool _inShape(Offset point, List<Offset> value) {
     var p0 = value[0];
-    var p3 = value[3];
-    return p0.dx <= point.dx &&
-        p3.dx >= point.dx &&
-        p0.dy <= point.dy &&
-        p3.dy >= point.dy;
+    var p1 = value[1];
+    var p2 = value[2];
+    var d1 = sign(point, p0, p1);
+    var d2 = sign(point, p1, p2);
+    var d3 = sign(point, p2, p0);
+
+    var hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+    var hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+    return !(hasNeg && hasPos);
+  }
+
+  double sign(Offset p1, Offset p2, Offset p3) {
+    return (p1.dx - p3.dx) * (p2.dy - p3.dy) - (p2.dx - p3.dx) * (p1.dy - p3.dy);
   }
 }

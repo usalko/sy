@@ -56,7 +56,7 @@ class _MutableCircleWidgetState extends State<MutableCircleWidget> {
   void _updateContent(int contentIndex) {
     var indexMark = IndexMark.of(contentIndex);
     if (_indexMark != indexMark) {
-      this.shape = GeometryShape.Square;
+      this.shape = GeometryShape.Circle;
       this._indexMark = indexMark;
     }
     var content = this.widget.content!;
