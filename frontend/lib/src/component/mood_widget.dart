@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/component/i_color_picker.dart';
 import 'package:frontend/src/component/mood_card_widget.dart';
+import 'package:frontend/src/component/shape_maker/mutable_circle_widget.dart';
 import 'package:frontend/src/component/shape_maker/mutable_square_widget.dart';
+import 'package:frontend/src/component/shape_maker/mutable_triangle_widget.dart';
 import 'package:frontend/src/component/square_widget.dart';
 import 'package:frontend/src/component/triangle_widget.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
@@ -84,10 +86,12 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
       cards = [
         this.colorPicker(context, GeometryShape.Triangle),
         MoodCardWidget(
-          child: TriangleWidget(
+          child: MutableTriangleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
             showGrid: true,
+            colorPicker: this,
+            content: mood!.content,
           ),
         ),
         actionButtons(context),
@@ -114,10 +118,12 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
       cards = [
         this.colorPicker(context, GeometryShape.Circle),
         MoodCardWidget(
-          child: CircleWidget(
+          child: MutableCircleWidget(
             width: cardWidth,
             color: Theme.of(context).dividerColor,
             showGrid: true,
+            colorPicker: this,
+            content: mood!.content,
           ),
         ),
         actionButtons(context),

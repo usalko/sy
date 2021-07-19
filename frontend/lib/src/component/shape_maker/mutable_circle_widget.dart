@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/component/i_color_picker.dart';
-import 'package:frontend/src/component/shape_maker/square_painter.dart';
+import 'package:frontend/src/component/shape_maker/circle_painter.dart';
 import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
 import 'package:frontend/src/model/index_mark.dart';
 
-class MutableSquareWidget extends StatefulWidget {
+class MutableCircleWidget extends StatefulWidget {
   final double width;
   final Color color;
   final bool showGrid;
@@ -14,7 +14,7 @@ class MutableSquareWidget extends StatefulWidget {
   final IColorPicker colorPicker;
   final List<Geometry?>? content;
 
-  MutableSquareWidget(
+  MutableCircleWidget(
       {required this.width,
       this.color = Colors.white,
       required this.colorPicker,
@@ -23,23 +23,23 @@ class MutableSquareWidget extends StatefulWidget {
       this.showGrid = false});
 
   @override
-  _MutableSquareWidgetState createState() => _MutableSquareWidgetState();
+  _MutableCircleWidgetState createState() => _MutableCircleWidgetState();
 }
 
-class _MutableSquareWidgetState extends State<MutableSquareWidget> {
-  GeometryShape shape = GeometryShape.Square;
+class _MutableCircleWidgetState extends State<MutableCircleWidget> {
+  GeometryShape shape = GeometryShape.Circle;
   IndexMark? _indexMark;
 
   @override
   Widget build(BuildContext context) {
-    var squarePainter = SquarePainter(
+    var circlePainter = CirclePainter(
         color: this.widget.color,
         content: this.widget.content,
         showBorder: this.widget.showBorder,
         showGrid: this.widget.showGrid);
     return GestureDetector(
         onTapDown: (details) {
-          var contentIndex = squarePainter.index(details.localPosition);
+          var contentIndex = circlePainter.index(details.localPosition);
           if (contentIndex != null && widget.content != null) {
             _updateContent(contentIndex);
             this.setState(() {});
@@ -49,7 +49,7 @@ class _MutableSquareWidgetState extends State<MutableSquareWidget> {
             height: this.widget.width,
             width: this.widget.width,
             child: CustomPaint(
-              painter: squarePainter,
+              painter: circlePainter,
             )));
   }
 
@@ -73,11 +73,11 @@ class _MutableSquareWidgetState extends State<MutableSquareWidget> {
     // Select next shape
     this._indexMark!.incrementCount();
     if (this._indexMark!.count % 3 == 0) {
-      this.shape = GeometryShape.Square;
-    } else if (this._indexMark!.count % 3 == 1) {
       this.shape = GeometryShape.Circle;
-    } else if (this._indexMark!.count % 3 == 2) {
+    } else if (this._indexMark!.count % 3 == 1) {
       this.shape = GeometryShape.Triangle;
+    } else if (this._indexMark!.count % 3 == 2) {
+      this.shape = GeometryShape.Square;
     }
   }
 }
