@@ -41,7 +41,6 @@ class CirclePainter extends CustomPainter {
 
     // Draw zones
     if (showGrid) {
-      var squareSide = min(size.width, size.height);
       var halfSquareSide = squareSide / 2;
       var radius = squareSide / 6;
       var topLeft =
@@ -91,6 +90,10 @@ class CirclePainter extends CustomPainter {
     // Draw content
     if (content != null) {
       var nineCenters = getNineCenters(size);
+      var radius = squareSide / 6;
+      var squareSideInscribedInCircle = sqrt(2*radius*radius);
+      var triangleDX = cos(30*pi/180)*radius;
+      var triangleDY = sin(30*pi/180)*radius;
 
       var i = 0;
       content?.take(9).forEach((geometry) {
@@ -103,19 +106,19 @@ class CirclePainter extends CustomPainter {
           if (geometry.shape == GeometryShape.Triangle) {
             var path = Path();
             path.moveTo(center.dx, center.dy - squareSide / 6);
-            path.lineTo(center.dx + squareSide / 6, center.dy + squareSide / 6);
-            path.lineTo(center.dx - squareSide / 6, center.dy + squareSide / 6);
+            path.lineTo(center.dx + triangleDX, center.dy + triangleDY);
+            path.lineTo(center.dx - triangleDX, center.dy + triangleDY);
             path.close();
             canvas.drawPath(path, paint);
           } else if (geometry.shape == GeometryShape.Square) {
             canvas.drawRect(
                 Rect.fromCenter(
                     center: center,
-                    width: squareSide / 3,
-                    height: squareSide / 3),
+                    width: squareSideInscribedInCircle,
+                    height: squareSideInscribedInCircle),
                 paint);
           } else if (geometry.shape == GeometryShape.Circle) {
-            canvas.drawCircle(center, squareSide / 6, paint);
+            canvas.drawCircle(center, radius, paint);
           } else {
             throw new UnimplementedError();
           }
@@ -129,15 +132,15 @@ class CirclePainter extends CustomPainter {
 
   List<Offset> getNineCenters(Size size) {
     return [
-      this._index![0].reduce((a, b) => a + b) / 4,
-      this._index![1].reduce((a, b) => a + b) / 4,
-      this._index![2].reduce((a, b) => a + b) / 4,
-      this._index![3].reduce((a, b) => a + b) / 4,
-      this._index![4].reduce((a, b) => a + b) / 4,
-      this._index![5].reduce((a, b) => a + b) / 4,
-      this._index![6].reduce((a, b) => a + b) / 4,
-      this._index![7].reduce((a, b) => a + b) / 4,
-      this._index![8].reduce((a, b) => a + b) / 4,
+      this._index![0][0],
+      this._index![1][0],
+      this._index![2][0],
+      this._index![3][0],
+      this._index![4][0],
+      this._index![5][0],
+      this._index![6][0],
+      this._index![7][0],
+      this._index![8][0],
     ];
   }
 
@@ -152,49 +155,40 @@ class CirclePainter extends CustomPainter {
 
   void _invalidateIndex(Size size) {
     var squareSide = min(size.width, size.height);
+    var halfSquareSide = squareSide / 2;
     var topLeft =
         Offset((size.width - squareSide) / 2, (size.height - squareSide) / 2);
-    var p0 = topLeft;
-    var p1 = Offset(squareSide / 3, 0) + topLeft;
-    var p2 = Offset(squareSide * 2 / 3, 0) + topLeft;
-    var p3 = Offset(squareSide, 0) + topLeft;
-
-    var p5 = Offset(0, squareSide / 3) + topLeft;
-    var p6 = Offset(squareSide / 3, squareSide / 3) + topLeft;
-    var p7 = Offset(squareSide * 2 / 3, squareSide / 3) + topLeft;
-    var p8 = Offset(squareSide, squareSide / 3) + topLeft;
-
-    var p9 = Offset(0, squareSide * 2 / 3) + topLeft;
-    var p10 = Offset(squareSide / 3, squareSide * 2 / 3) + topLeft;
-    var p11 = Offset(squareSide * 2 / 3, squareSide * 2 / 3) + topLeft;
-    var p12 = Offset(squareSide, squareSide * 2 / 3) + topLeft;
-
-    var p13 = Offset(0, squareSide) + topLeft;
-    var p14 = Offset(squareSide / 3, squareSide) + topLeft;
-    var p15 = Offset(squareSide * 2 / 3, squareSide) + topLeft;
-    var p16 = Offset(squareSide, squareSide) + topLeft;
+    var p0 = Offset(halfSquareSide, halfSquareSide) + topLeft;
+    var p1 = Offset(halfSquareSide, halfSquareSide / 3) + topLeft;
+    var p2 = Offset(halfSquareSide, halfSquareSide * (1 + 2 / 3)) + topLeft;
+    var p3 = Offset(halfSquareSide / 3, halfSquareSide) + topLeft;
+    var p4 = Offset(halfSquareSide * (1 + 2 / 3), halfSquareSide) + topLeft;
+    var p5 = Offset(halfSquareSide / 1.9, halfSquareSide / 1.9) + topLeft;
+    var p6 = Offset(halfSquareSide * (2 - 1 / 1.9), halfSquareSide / 1.9) + topLeft;
+    var p7 = Offset(halfSquareSide / 1.9, halfSquareSide * (2 - 1 / 1.9)) + topLeft;
+    var p8 = Offset(halfSquareSide * (2 - 1 / 1.9), halfSquareSide * (2 - 1 / 1.9)) + topLeft;
 
     this._index = [
-      [p0, p1, p5, p6],
-      [p1, p2, p6, p7],
-      [p2, p3, p7, p8],
-      [p5, p6, p9, p10],
-      [p6, p7, p10, p11],
-      [p7, p8, p11, p12],
-      [p9, p10, p13, p14],
-      [p10, p11, p14, p15],
-      [p11, p12, p15, p16],
+      [p0],
+      [p1],
+      [p2],
+      [p3],
+      [p4],
+      [p5],
+      [p6],
+      [p7],
+      [p8],
     ];
 
     this._size = size;
   }
 
   bool _inShape(Offset point, List<Offset> value) {
+    var squareSide = min(_size!.width, _size!.height);
+    var radius = squareSide / 6;
     var p0 = value[0];
-    var p3 = value[3];
-    return p0.dx <= point.dx &&
-        p3.dx >= point.dx &&
-        p0.dy <= point.dy &&
-        p3.dy >= point.dy;
+    var vector = point - p0;
+    // Calculate norma
+    return sqrt(vector.dx * vector.dx + vector.dy * vector.dy) <= radius;
   }
 }

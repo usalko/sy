@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
  * Health check api
  */
 @RestController
-@RequestMapping("/api/geometry")
+@RequestMapping("/api/Geometry")
 public class HealthCheckController {
 
     private final GeometryShapeService GeometryShapeService;
@@ -23,7 +23,7 @@ public class HealthCheckController {
         this.GeometryShapeService = GeometryShapeService;
     }
 
-    @GetMapping(value = {"/"})
+    @GetMapping(value = {""})
     public @NotNull Iterable<String> getGeometryShapes() {
         return StreamSupport.stream(GeometryShapeService.getAllGeometryShapes().spliterator(), false)
                 .map(GeometryShape::getMnemonic).collect(Collectors.toList());

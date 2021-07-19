@@ -135,31 +135,31 @@ class SquarePainter extends CustomPainter {
     var p2 = Offset(squareSide * 2 / 3, 0) + topLeft;
     var p3 = Offset(squareSide, 0) + topLeft;
 
-    var p5 = Offset(0, squareSide / 3) + topLeft;
-    var p6 = Offset(squareSide / 3, squareSide / 3) + topLeft;
-    var p7 = Offset(squareSide * 2 / 3, squareSide / 3) + topLeft;
-    var p8 = Offset(squareSide, squareSide / 3) + topLeft;
+    var p4 = Offset(0, squareSide / 3) + topLeft;
+    var p5 = Offset(squareSide / 3, squareSide / 3) + topLeft;
+    var p6 = Offset(squareSide * 2 / 3, squareSide / 3) + topLeft;
+    var p7 = Offset(squareSide, squareSide / 3) + topLeft;
 
-    var p9 = Offset(0, squareSide * 2 / 3) + topLeft;
-    var p10 = Offset(squareSide / 3, squareSide * 2 / 3) + topLeft;
-    var p11 = Offset(squareSide * 2 / 3, squareSide * 2 / 3) + topLeft;
-    var p12 = Offset(squareSide, squareSide * 2 / 3) + topLeft;
+    var p8 = Offset(0, squareSide * 2 / 3) + topLeft;
+    var p9 = Offset(squareSide / 3, squareSide * 2 / 3) + topLeft;
+    var p10 = Offset(squareSide * 2 / 3, squareSide * 2 / 3) + topLeft;
+    var p11 = Offset(squareSide, squareSide * 2 / 3) + topLeft;
 
-    var p13 = Offset(0, squareSide) + topLeft;
-    var p14 = Offset(squareSide / 3, squareSide) + topLeft;
-    var p15 = Offset(squareSide * 2 / 3, squareSide) + topLeft;
-    var p16 = Offset(squareSide, squareSide) + topLeft;
+    var p12 = Offset(0, squareSide) + topLeft;
+    var p13 = Offset(squareSide / 3, squareSide) + topLeft;
+    var p14 = Offset(squareSide * 2 / 3, squareSide) + topLeft;
+    var p15 = Offset(squareSide, squareSide) + topLeft;
 
     this._index = [
-      [p0, p1, p5, p6],
-      [p1, p2, p6, p7],
-      [p2, p3, p7, p8],
+      [p0, p1, p4, p5],
+      [p1, p2, p5, p6],
+      [p2, p3, p6, p7],
+      [p4, p5, p8, p9],
       [p5, p6, p9, p10],
       [p6, p7, p10, p11],
-      [p7, p8, p11, p12],
+      [p8, p9, p12, p13],
       [p9, p10, p13, p14],
       [p10, p11, p14, p15],
-      [p11, p12, p15, p16],
     ];
 
     this._size = size;
