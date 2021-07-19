@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/component/i_color_picker.dart';
+import 'package:frontend/src/component/mood_actions_widget.dart';
 import 'package:frontend/src/component/mood_card_widget.dart';
 import 'package:frontend/src/component/shape_maker/mutable_circle_widget.dart';
 import 'package:frontend/src/component/shape_maker/mutable_square_widget.dart';
@@ -29,22 +32,58 @@ class MoodWidget extends StatefulWidget {
 }
 
 class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
-  Color screenPickerColor = Colors.white;
+  Color screenPickerColor = Colors.red;
   Mood? mood;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     widget.viewModeService.screenChangeEvent.subscribe((args) {
       if (args is ScreenChangeArgs) {
         this.setState(() {});
       }
     });
+  }
 
+  @override
+  void dispose() {
+    widget.viewModeService.screenChangeEvent.unsubscribeAll();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var cards = <Widget>[];
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
+
+    final actionsWidget = MoodActionsWidget(
+      onShare: () async {
+        if (await this
+            .widget
+            .moodService
+            .shareMood(this.widget.moodService.token, this.mood!)) {
+          this.setState(() {
+            this.widget.viewModeService.screen = TheScreen.Screen1;
+          });
+        }
+      },
+      onClose: () => this.setState(() {
+        this.widget.viewModeService.screen = TheScreen.Screen1;
+      }),
+      onKeepForNow: () async {
+        if (await this
+            .widget
+            .moodService
+            .keepMoodForNow(this.widget.moodService.token, this.mood!)) {
+          this.setState(() {
+            this.widget.viewModeService.screen = TheScreen.Screen1;
+          });
+        }
+      },
+    );
 
     if (widget.viewModeService.screen == TheScreen.Screen1) {
-      var cardWidth = size.width / 3 - 30;
+      var cardWidth = max(size.width, 740.0) / 3 - 30;
       cards = [
         GestureDetector(
           onTap: () => setState(() {
@@ -85,48 +124,57 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Triangle),
-        MoodCardWidget(
-          child: MutableTriangleWidget(
-            width: cardWidth,
-            color: Theme.of(context).dividerColor,
-            showGrid: true,
-            colorPicker: this,
-            content: mood!.content,
+        Padding(
+          padding: EdgeInsets.only(top: 66),
+          child: MoodCardWidget(
+            child: MutableTriangleWidget(
+              width: cardWidth,
+              color: Theme.of(context).dividerColor,
+              showGrid: true,
+              colorPicker: this,
+              content: mood!.content,
+            ),
           ),
         ),
-        actionButtons(context),
+        actionsWidget,
       ];
     } else if (widget.viewModeService.screen == TheScreen.Screen2Square) {
       this.mood = Mood.square(this.mood != null ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Square),
-        MoodCardWidget(
-          child: MutableSquareWidget(
-            width: cardWidth,
-            color: Theme.of(context).dividerColor,
-            showGrid: true,
-            colorPicker: this,
-            content: mood!.content,
+        Padding(
+          padding: EdgeInsets.only(top: 66),
+          child: MoodCardWidget(
+            child: MutableSquareWidget(
+              width: cardWidth,
+              color: Theme.of(context).dividerColor,
+              showGrid: true,
+              colorPicker: this,
+              content: mood!.content,
+            ),
           ),
         ),
-        actionButtons(context),
+        actionsWidget,
       ];
     } else if (widget.viewModeService.screen == TheScreen.Screen2Circle) {
       this.mood = Mood.circle(this.mood != null ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Circle),
-        MoodCardWidget(
-          child: MutableCircleWidget(
-            width: cardWidth,
-            color: Theme.of(context).dividerColor,
-            showGrid: true,
-            colorPicker: this,
-            content: mood!.content,
+        Padding(
+          padding: EdgeInsets.only(top: 66),
+          child: MoodCardWidget(
+            child: MutableCircleWidget(
+              width: cardWidth,
+              color: Theme.of(context).dividerColor,
+              showGrid: true,
+              colorPicker: this,
+              content: mood!.content,
+            ),
           ),
         ),
-        actionButtons(context),
+        actionsWidget,
       ];
     } else {
       throw new UnimplementedError();
@@ -169,71 +217,6 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
             subheading: Divider(),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget actionButtons(BuildContext context) {
-    return SizedBox(
-      width: 130,
-      child: Padding(
-        padding: const EdgeInsets.all(0),
-        child: Card(
-            color: Theme.of(context).canvasColor,
-            elevation: 0,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          if (await this.widget.moodService.shareMood(
-                              this.widget.moodService.token, this.mood!)) {
-                            setState(() {
-                              this.widget.viewModeService.screen =
-                                  TheScreen.Screen1;
-                            });
-                          }
-                        },
-                        icon: const Icon(Icons.share),
-                      ),
-                      IconButton(
-                        onPressed: () => setState(() {
-                          this.widget.viewModeService.screen =
-                              TheScreen.Screen1;
-                        }),
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: IconButton(
-                      onPressed: () async {
-                        if (await this.widget.moodService.keepMoodForNow(
-                            this.widget.moodService.token, this.mood!)) {
-                          setState(() {
-                            this.widget.viewModeService.screen =
-                                TheScreen.Screen1;
-                          });
-                        }
-                      },
-                      icon: const Icon(Icons.save),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-              ],
-            )),
       ),
     );
   }

@@ -40,7 +40,7 @@ public class MoodController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Request all shared moods")
     public @NotNull Iterable<SharedMood> getSharedMoods() {
-        Iterable<SharedMood> result = this.moodService.getSharedMoods(50);
+        Iterable<SharedMood> result = this.moodService.getSharedMoods(200);
         result.forEach(this::inPlaceUnpackMoodGeometryShapes);
         return result;
     }

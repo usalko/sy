@@ -28,103 +28,33 @@ class HistoryWidget extends StatefulWidget {
 }
 
 class _HistoryWidgetState extends State<HistoryWidget> {
-  final controller = ScrollController();
-  // @Explanation: https://stackoverflow.com/questions/49307677/how-to-get-height-of-a-widget
-  //               https://github.com/flutter/flutter/issues/168
-  OverlayEntry? sticky;
-  GlobalKey stickyKey = GlobalKey();
-  GlobalKey listViewKey = GlobalKey();
-
   late Future<List<Mood>> history;
 
   @override
   void initState() {
-    sticky?.remove();
-    this.sticky = OverlayEntry(
-      builder: (context) => stickyBuilder(context),
-    );
-
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
-      Overlay.of(context)?.insert(this.sticky!);
-    });
-
+    super.initState();
     this.history =
         this.widget.moodService.getHistory(this.widget.moodService.token);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    sticky?.remove();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     widget.viewModeService.screenChangeEvent.subscribe((args) {
       if (args is ScreenChangeArgs) {
         this.setState(() {
-          sticky?.remove();
-          this.sticky = OverlayEntry(
-            builder: (context) => stickyBuilder(context),
-          );
-
-          SchedulerBinding.instance?.addPostFrameCallback((_) {
-            Overlay.of(context)?.insert(this.sticky!);
-          });
-
           this.history =
               this.widget.moodService.getHistory(this.widget.moodService.token);
         });
       }
     });
-
-    if (this.widget.viewModeService.screen == TheScreen.Screen1) {
-      return Column(
-        children: <Widget>[
-          Flexible(
-            child: getHistory(context, this.widget.viewModeService.screen),
-          )
-        ],
-      );
-    }
-    return Container(
-        key: stickyKey,
-        height: 22.0,
-        child: SizedBox(
-          width: 60.0 * 4,
-        ) // Covered object anticipation
-        );
   }
 
-  Widget stickyBuilder(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (_, Widget? child) {
-        final keyContext = stickyKey.currentContext;
-        if (keyContext != null) {
-          // widget is visible
-          final box = keyContext.findRenderObject() as RenderBox;
-          final pos = box.localToGlobal(Offset.zero);
-          final leftPadding = pos.dx;
-          return Positioned(
-            top: pos.dy,
-            left: leftPadding,
-            right: leftPadding,
-            height: box.size.height,
-            child: Material(
-              child: Container(
-                key: this.listViewKey,
-                alignment: Alignment.center,
-                child: getHistory(context, this.widget.viewModeService.screen),
-              ),
-            ),
-          );
-        }
-        return Container();
-      },
-    );
+  @override
+  void dispose() {
+    widget.viewModeService.screenChangeEvent.unsubscribeAll();
+    widget.moodService.apiDisableEvent.unsubscribeAll();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return getHistory(context, this.widget.viewModeService.screen);
   }
 
   Widget getHistory(BuildContext context, TheScreen? screen) {
@@ -142,9 +72,13 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                   snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
             );
           }
-          return ListView(
-            scrollDirection: Axis.horizontal,
-            children: snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
+          return Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children:
+                  snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
+            ),
           );
         } else if (snapshot.hasError) {
           if (this.widget.moodService.isApiDisabled) {

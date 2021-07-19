@@ -4,6 +4,8 @@ import 'package:frontend/src/component/history_widget.dart';
 import 'package:frontend/src/component/mood_widget.dart';
 import 'package:frontend/src/component/shared_moods_widget.dart';
 import 'package:frontend/src/model/api_disable_args.dart';
+import 'package:frontend/src/model/screen_change_args.dart';
+import 'package:frontend/src/model/the_screen.dart';
 import 'package:frontend/src/service/mood_service.dart';
 import 'package:frontend/src/service/view_mode_service.dart';
 
@@ -60,11 +62,12 @@ class SyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Share yours mood with anyone',
         theme: ThemeData(
-            primarySwatch: syPrimaryColor,
-            accentColor: sySecondaryColor,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            fontFamily: 'TexGyreHeros',
-            ),
+          primarySwatch: syPrimaryColor,
+          accentColor: sySecondaryColor,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: 'TexGyreHeros',
+          scrollbarTheme: ScrollbarThemeData(isAlwaysShown: true),
+        ),
         home: HomePage(
           title: 'Share yours mood with anyone',
           moodService: MoodService(),
@@ -93,15 +96,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final minWidth = 740.0;
+  final minHeight = 880.0;
+
+  ScrollController _horizontalController = ScrollController();
+  ScrollController _verticalController = ScrollController();
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     widget.moodService.apiDisableEvent.subscribe((args) {
       if (args is ApiDisableArgs) {
         this.setState(() {});
       }
     });
+    widget.viewModeService.screenChangeEvent.subscribe((args) {
+      if (args is ScreenChangeArgs) {
+        this.setState(() {});
+      }
+    });
+  }
 
-    var scaffold = Scaffold(
+  @override
+  void dispose() {
+    _horizontalController.dispose();
+    _verticalController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildScaffold() {
+    return Scaffold(
       body: Container(
           child: Column(children: [
         Flexible(
@@ -111,7 +135,7 @@ class _HomePageState extends State<HomePage> {
               viewModeService: widget.viewModeService),
         ),
         Expanded(
-          flex: 6,
+          flex: widget.viewModeService.screen == TheScreen.Screen1 ? 1 : 6,
           child: MoodWidget(
               moodService: widget.moodService,
               viewModeService: widget.viewModeService),
@@ -124,6 +148,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ])),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scaffold = _buildScaffold();
 
     if (kDebugMode) {
       return Banner(
