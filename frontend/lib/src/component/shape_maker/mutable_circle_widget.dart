@@ -63,7 +63,7 @@ class _MutableCircleWidgetState extends State<MutableCircleWidget> {
     for (var i = content.length - 1; i < contentIndex - 1; i++) {
       content.add(null);
     }
-    var geometry = Geometry(this.shape, this.widget.colorPicker.color().value);
+    var geometry = this.shape != GeometryShape.Empty ? Geometry(this.shape, this.widget.colorPicker.color().value): null;
     if (contentIndex >= content.length) {
       content.add(geometry);
     } else {
@@ -72,12 +72,14 @@ class _MutableCircleWidgetState extends State<MutableCircleWidget> {
 
     // Select next shape
     this._indexMark!.incrementCount();
-    if (this._indexMark!.count % 3 == 0) {
+    if (this._indexMark!.count % 4 == 0) {
       this.shape = GeometryShape.Circle;
-    } else if (this._indexMark!.count % 3 == 1) {
+    } else if (this._indexMark!.count % 4 == 1) {
       this.shape = GeometryShape.Triangle;
-    } else if (this._indexMark!.count % 3 == 2) {
+    } else if (this._indexMark!.count % 4 == 2) {
       this.shape = GeometryShape.Square;
+    } else if (this._indexMark!.count % 4 == 3) {
+      this.shape = GeometryShape.Empty;
     }
   }
 }

@@ -1,16 +1,19 @@
 enum GeometryShape {
+  Empty,
   Triangle,
   Square,
   Circle
 }
 
 extension GeometryShapeExt on GeometryShape {
-  static const Map<GeometryShape, String> keys = {
+  static const Map<GeometryShape, String?> keys = {
+    GeometryShape.Empty: null,
     GeometryShape.Triangle: 'triangle',
     GeometryShape.Square: 'square',
     GeometryShape.Circle: 'circle',
   };
-  static const Map<String, GeometryShape> values = {
+  static const Map<String?, GeometryShape> values = {
+    null: GeometryShape.Empty,
     'triangle': GeometryShape.Triangle,
     'square': GeometryShape.Square,
     'circle': GeometryShape.Circle,
