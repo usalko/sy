@@ -35,11 +35,11 @@ public abstract class MoodGeometryShape implements Comparable<MoodGeometryShape>
         this.color = color;
     }
 
-    public abstract Integer getIndex();
+    public abstract Integer getIndexInList();
 
     @Transient
     @JsonIgnore
-    public abstract void setIndex(Integer index);
+    public abstract void setIndexInList(Integer indexInList);
 
     @Transient
     @JsonIgnore
@@ -52,6 +52,6 @@ public abstract class MoodGeometryShape implements Comparable<MoodGeometryShape>
 
     @Override
     public int compareTo(MoodGeometryShape o) {
-        return Integer.compare(this.getIndex(), o.getIndex());
+        return Integer.compare(this.getIndexInList(), o.getIndexInList());
     }
 }

@@ -41,7 +41,7 @@ public class OwnMoodGeometryShape extends MoodGeometryShape {
         pk.setOwnMood(ownMood);
         pk.setGeometryShape(geometry);
         this.setColor(color);
-        pk.setIndex(index);
+        pk.setIndexInList(index);
     }
 
     @Override
@@ -50,13 +50,13 @@ public class OwnMoodGeometryShape extends MoodGeometryShape {
     }
 
     @Override
-    public Integer getIndex() {
-        return this.pk.getIndex();
+    public Integer getIndexInList() {
+        return this.pk.getIndexInList();
     }
 
     @Override
-    public void setIndex(Integer index) {
-        this.pk.setIndex(index);
+    public void setIndexInList(Integer indexInList) {
+        this.pk.setIndexInList(indexInList);
     }
 
     @Override

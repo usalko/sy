@@ -18,10 +18,7 @@ package io.github.usalko.sy.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -39,7 +36,8 @@ public class SharedMoodGeometryShapePK implements Serializable {
     @JoinColumn(name = "geometry_shape_id")
     private GeometryShape geometryShape;
 
-    private Integer index;
+    @Column(name = "index_in_list")
+    private Integer indexInList;
 
     public SharedMood getSharedMood() {
         return sharedMood;
@@ -57,12 +55,12 @@ public class SharedMoodGeometryShapePK implements Serializable {
         this.geometryShape = geometryShape;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getIndexInList() {
+        return indexInList;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setIndexInList(Integer indexInList) {
+        this.indexInList = indexInList;
     }
 
     @Override
@@ -76,11 +74,11 @@ public class SharedMoodGeometryShapePK implements Serializable {
         SharedMoodGeometryShapePK that = (SharedMoodGeometryShapePK) o;
         return Objects.equals(sharedMood, that.sharedMood) &&
                 Objects.equals(geometryShape, that.geometryShape) &&
-                Objects.equals(index, that.index);
+                Objects.equals(indexInList, that.indexInList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sharedMood, geometryShape, index);
+        return Objects.hash(sharedMood, geometryShape, indexInList);
     }
 }

@@ -67,9 +67,9 @@ public class MoodController {
             Arrays.sort(content);
             List<T> result = new ArrayList<>();
             int cursor = 0;
-            int lastIndex = content[content.length - 1].getIndex();
+            int lastIndex = content[content.length - 1].getIndexInList();
             for (int i = 0; i <= lastIndex; i++) {
-                if (content[cursor].getIndex() > i) {
+                if (content[cursor].getIndexInList() > i) {
                     result.add(null);
                     continue;
                 }
@@ -108,7 +108,7 @@ public class MoodController {
             OwnMoodGeometryShape moodGeometryShape = moodGeometryShapes.get(index);
             if (moodGeometryShape != null) {
                 // Pack geometry shapes
-                moodGeometryShape.setIndex(index);
+                moodGeometryShape.setIndexInList(index);
                 this.moodGeometryShapeService.create(moodGeometryShape);
             }
         });
@@ -129,7 +129,7 @@ public class MoodController {
             SharedMoodGeometryShape moodGeometryShape = moodGeometryShapes.get(index);
             if (moodGeometryShape != null) {
                 // Pack geometry shapes
-                moodGeometryShape.setIndex(index);
+                moodGeometryShape.setIndexInList(index);
                 this.moodGeometryShapeService.create(moodGeometryShape);
             }
         });

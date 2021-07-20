@@ -36,22 +36,22 @@ public class SharedMoodGeometryShape extends MoodGeometryShape {
         pk = new SharedMoodGeometryShapePK();
     }
 
-    public SharedMoodGeometryShape(SharedMood sharedMood, GeometryShape geometry, Integer color, Integer index) {
+    public SharedMoodGeometryShape(SharedMood sharedMood, GeometryShape geometry, Integer color, Integer indexInList) {
         pk = new SharedMoodGeometryShapePK();
         pk.setSharedMood(sharedMood);
         pk.setGeometryShape(geometry);
         this.setColor(color);
-        this.setIndex(index);
+        this.setIndexInList(indexInList);
     }
 
     @Override
-    public Integer getIndex() {
-        return this.pk.getIndex();
+    public Integer getIndexInList() {
+        return this.pk.getIndexInList();
     }
 
     @Override
-    public void setIndex(Integer index) {
-        this.pk.setIndex(index);
+    public void setIndexInList(Integer indexInList) {
+        this.pk.setIndexInList(indexInList);
     }
 
     @Override
