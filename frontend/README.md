@@ -1,3 +1,3 @@
 # frontend
 
-Share yours mood with anyone
+Share your mood with anyone

@@ -41,7 +41,7 @@ if [ "x$COMMAND" == "xbuild-demo" ]; then
     [ -d ~/.m2 ] || mkdir ~/.m2
     docker run --rm -it -v ${PWD}:/build -u $(id -u ${USER}):$(id -g ${USER}) -v ~/.m2:/.m2 -e MAVEN_OPTS="-Dmaven.repo.local=/.m2" --workdir /build maven:3.8.1 mvn package
     cp -fr ../frontend/build/web target/
-    docker build -t demo2/demo212:latest . -f Dockerfile.212
+    docker build -t iusalko/demo212:latest . -f Dockerfile.212
 fi
 
 if [ "x$COMMAND" == "xrun" ]; then
@@ -53,7 +53,7 @@ fi
 if [ "x$COMMAND" == "xrun-demo" ]; then
     echo 'Run docker image demo212'
     docker container rm demo212
-    docker run -p 80 -l demo212 --name demo212 demo2/demo212:latest
+    docker run -p 80 -l demo212 --name demo212 iusalko/demo212:latest
 fi
 
 if [ "x$COMMAND" == "xstop" ]; then
@@ -65,9 +65,6 @@ if [ "x$COMMAND" == "xstop-demo" ]; then
     echo 'Stop docker image demo212'
     docker kill demo212
 fi
-
-# TESTS
-# venv/bin/python -m unittest discover -s ./tests -p 'test_*.py' -t . -b --locals -v
 
 if [ "x$COMMAND" == "xdeploy" ]; then
     build
@@ -84,8 +81,13 @@ if [ "x$COMMAND" == "xdeploy" ]; then
     docker push $AWS_ACCOUNT/demo22:latest
 fi
 
+if [ "x$COMMAND" == "xdeploy-demo" ]; then
+    echo 'Deploy docker image demo212'
+    docker push iusalko/demo212
+fi
 
-AVAILABLE_COMMANDS="build build-demo run run-demo stop stop-demo deploy"
+
+AVAILABLE_COMMANDS="build build-demo run run-demo stop stop-demo deploy deploy-demo"
 echo ''
 [[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
 

@@ -1,3 +1,19 @@
+// Sy (Share your mood with anyone)
+// Copyright (C) July 2021 Ivan Usalko <ivict@rambler.ru>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/component/i_color_picker.dart';
@@ -63,7 +79,9 @@ class _MutableCircleWidgetState extends State<MutableCircleWidget> {
     for (var i = content.length - 1; i < contentIndex - 1; i++) {
       content.add(null);
     }
-    var geometry = this.shape != GeometryShape.Empty ? Geometry(this.shape, this.widget.colorPicker.color().value): null;
+    var geometry = this.shape != GeometryShape.Empty
+        ? Geometry(this.shape, this.widget.colorPicker.color().value)
+        : null;
     if (contentIndex >= content.length) {
       content.add(geometry);
     } else {

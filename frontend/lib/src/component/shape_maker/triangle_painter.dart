@@ -1,3 +1,19 @@
+// Sy (Share your mood with anyone)
+// Copyright (C) July 2021 Ivan Usalko <ivict@rambler.ru>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -75,9 +91,12 @@ class TrianglePainter extends CustomPainter {
     }
     // Draw content
     if (content != null) {
-      var radius = tan(30*pi/180) * squareSide / 6; // TODO: fix calculation for inscribed circle
+      var radius = tan(30 * pi / 180) *
+          squareSide /
+          6; // TODO: fix calculation for inscribed circle
       var triangleBase = squareSide / 3;
-      var smallSquareSide = triangleBase * triangleBase / (triangleBase + triangleBase);
+      var smallSquareSide =
+          triangleBase * triangleBase / (triangleBase + triangleBase);
 
       var i = 0;
       content?.take(9).forEach((geometry) {
@@ -101,7 +120,10 @@ class TrianglePainter extends CustomPainter {
             var p0 = this._index![i][0];
             canvas.drawRect(
                 Rect.fromCenter(
-                    center: Offset(p0.dx, p0.dy + (p0.dy < center.dy ? 3: -3) * smallSquareSide / 2),
+                    center: Offset(
+                        p0.dx,
+                        p0.dy +
+                            (p0.dy < center.dy ? 3 : -3) * smallSquareSide / 2),
                     width: smallSquareSide,
                     height: smallSquareSide),
                 paint);
@@ -176,6 +198,7 @@ class TrianglePainter extends CustomPainter {
   }
 
   double sign(Offset p1, Offset p2, Offset p3) {
-    return (p1.dx - p3.dx) * (p2.dy - p3.dy) - (p2.dx - p3.dx) * (p1.dy - p3.dy);
+    return (p1.dx - p3.dx) * (p2.dy - p3.dy) -
+        (p2.dx - p3.dx) * (p1.dy - p3.dy);
   }
 }
