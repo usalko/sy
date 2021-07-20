@@ -83,6 +83,7 @@ fi
 
 if [ "x$COMMAND" == "xdeploy-demo" ]; then
     echo 'Deploy docker image demo212'
+    docker login
     docker push iusalko/demo212
 fi
 
