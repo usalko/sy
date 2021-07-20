@@ -1,0 +1,14 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Venv
+.pip
+.venv
+
+# Private properties
+.buildew
+
+# Local databse
+*.sqlite3

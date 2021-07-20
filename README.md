@@ -2,11 +2,12 @@
 
 Share your mood with anyone
 
-# The demo
+# The list of demos
 
 |Folder|Implementation language|Docker demo
 |------|-----------------------|-----------
 |backend-java-spring-maven|Java language (Java 8 SE)|[iusalko/demo212](https://hub.docker.com/r/iusalko/demo212)
+|backend-python-django|Python language (Python 3.7)|[iusalko/demo213](https://hub.docker.com/r/iusalko/demo213)
 
 # The idea pretty simple
 

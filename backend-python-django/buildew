@@ -1,0 +1,138 @@
+#!/bin/bash
+
+PYTHON=python3.7m
+# CHECK PYTHON 3
+if command -v $PYTHON &>/dev/null; then
+   echo Python3 available
+else
+   echo Python3 not available, please install it or add to the PATH variable
+   exit 1
+fi
+
+# CHECK PIP
+if command -v $PYTHON -m pip &>/dev/null; then
+   echo Pip available
+else
+   echo Pip not available, please install it or add to the PATH variable
+   exit 1
+fi
+
+# CHECK VIRTUALENV COMMAND
+if command -v $PYTHON -m venv &>/dev/null; then
+   echo Venv command available
+else
+   echo Venv not available, please install it [For example: python3 -m pip install python-venv]
+   exit 1
+fi
+
+COMMAND=$1
+PYTHON_VERSION=3.7m
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --python-version) PYTHON_VERSION="$2"; shift; shift ;;
+        *) COMMAND=$1; shift; break ;;
+    esac
+    shift
+done
+# CHECK VENV NOT EXISTS
+if [ ! -d .venv ]; then
+
+    $PYTHON -m venv .venv
+    if [ ! -d .pip ]; then
+        mkdir .pip
+        curl https://bootstrap.pypa.io/get-pip.py -o .pip/get-pip.py
+    fi
+    .venv/bin/python3 .pip/get-pip.py
+    .venv/bin/pip3 install -r requirements.txt
+fi
+
+if [ -f '.buildew' ]; then
+	echo Use .buildew file to read sensitive information
+	while IPS='=' read -r key value; do
+        eval ${key}
+	done < '.buildew'
+else
+    # REGENERATE SENSITIVE INFO FROM TEMPLATE
+    cat >'.buildew'<< EOF
+AWS_ACCOUNT=1234567890.dkr.ecr.us-east-x.amazonaws.com
+AWS_PROFILE=devops.user
+AWS_REGION=us-east-x
+EOF
+fi
+
+echo EXECUTE
+echo =========== $COMMAND
+echo $COMMAND ===========
+echo COMMAND
+
+if [ "x$COMMAND" == "xbuild" ]; then
+    [ -d ~/.m2 ] || mkdir ~/.m2
+    docker run --rm -it -v ${PWD}:/build -u $(id -u ${USER}):$(id -g ${USER}) -v ~/.m2:/.m2 -e MAVEN_OPTS="-Dmaven.repo.local=/.m2" --workdir /build maven:3.8.1 mvn package
+    docker build -t demo2/demo23:latest .
+fi
+
+if [ "x$COMMAND" == "xbuild-demo" ]; then
+    CURRENT_FOLDER=$PWD
+    cd ../frontend
+    ./buildew build
+    cd $CURRENT_FOLDER
+    [ -d ~/.m2 ] || mkdir ~/.m2
+    docker run --rm -it -v ${PWD}:/build -u $(id -u ${USER}):$(id -g ${USER}) -v ~/.m2:/.m2 -e MAVEN_OPTS="-Dmaven.repo.local=/.m2" --workdir /build maven:3.8.1 mvn package
+    cp -fr ../frontend/build/web target/
+    docker build -t iusalko/demo213:latest . -f Dockerfile.212
+fi
+
+if [ "x$COMMAND" == "xrun" ]; then
+    echo 'Run docker image demo23'
+    docker container rm demo23
+    docker run -p 8080 -l demo23 --name demo23 demo2/demo23:latest
+fi
+
+if [ "x$COMMAND" == "xrun-demo" ]; then
+    echo 'Run docker image demo213'
+    docker container rm demo213
+    docker run -p 80 -l demo213 --name demo213 iusalko/demo213:latest
+fi
+
+if [ "x$COMMAND" == "xstop" ]; then
+    echo 'Stop docker image demo23'
+    docker kill demo23
+fi
+
+if [ "x$COMMAND" == "xstop-demo" ]; then
+    echo 'Stop docker image demo213'
+    docker kill demo213
+fi
+
+if [ "x$COMMAND" == "xdeploy" ]; then
+    build
+    echo Deploy docker image to the AWS
+    echo I\'ll use account: $AWS_ACCOUNT \(like: 1234567.dkr.ecr.us-east-1.amazonaws.com\)
+    echo AWS_PROFILE is $AWS_PROFILE
+    echo AWS_REGION is $AWS_REGION
+    aws ecr get-login-password --profile $AWS_PROFILE --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT
+    mkdir -p .prebuild
+    cp -fr ~/.demo23 .prebuild
+    docker build -t demo23 .
+    rm -fr .prebuild
+    docker tag demo23:latest $AWS_ACCOUNT/demo23:latest
+    docker push $AWS_ACCOUNT/demo23:latest
+fi
+
+if [ "x$COMMAND" == "xdeploy-demo" ]; then
+    echo 'Deploy docker image demo213'
+    docker login
+    docker push iusalko/demo213
+fi
+
+if [ "x$COMMAND" == "xmanage" ]; then
+    echo "Run manage.py script manage.py $@"
+    .venv/bin/python3 manage.py $@
+fi
+
+
+
+AVAILABLE_COMMANDS="build build-demo run run-demo stop stop-demo deploy deploy-demo manage"
+echo ''
+[[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
+
