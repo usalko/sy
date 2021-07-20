@@ -8,8 +8,8 @@
             "name": "Sy.dart",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "debug",
-            //"flutterMode": "profile",
+            //"flutterMode": "debug",
+            "flutterMode": "profile",
             "args": [
                 "--dart-define", "API_ENDPOINT=http://localhost:8080/api",
                 "-d", "chrome", "--web-hostname", "localhost", "--web-port", "43433"

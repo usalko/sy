@@ -49,6 +49,8 @@ if [ "x$COMMAND" == "xdev" ]; then
     flutter upgrade --force
     flutter clean
     flutter pub get
+    flutter pub cache repair
+    ps -Fe | grep flutter | awk '{ print $2  }' | xargs kill -9
     export PUB_CACHE=~/.pub-cache
 fi
 

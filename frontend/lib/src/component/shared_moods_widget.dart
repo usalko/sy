@@ -27,9 +27,13 @@ class SharedMoodsWidget extends StatefulWidget {
 class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
   late Future<List<Mood>> sharedMoods;
 
+  late ScrollController scrollController;
+
   @override
   void initState() {
     super.initState();
+    this.scrollController =
+        new ScrollController(initialScrollOffset: 0, keepScrollOffset: false);
     this.sharedMoods = this.widget.moodService.getSharedMoods();
     widget.viewModeService.screenChangeEvent.subscribe((args) {
       if (args is ScreenChangeArgs) {
@@ -44,6 +48,7 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
   void dispose() {
     widget.viewModeService.screenChangeEvent.unsubscribeAll();
     widget.moodService.apiDisableEvent.unsubscribeAll();
+    this.scrollController.dispose();
     super.dispose();
   }
 
@@ -56,33 +61,50 @@ class _SharedMoodsWidgetState extends State<SharedMoodsWidget> {
     if (this.widget.moodService.isApiDisabled) {
       return ApiIsDisabledWidget();
     }
-
     return FutureBuilder<List<Mood>>(
       future: this.sharedMoods,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var size = MediaQuery.of(context).size;
-          if (screen == TheScreen.Screen1) {
-            return Container(
-              padding: const EdgeInsets.only(left: 20, top: 25, right: 20),
-              child: GridView.count(
-                primary: false,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0,
-                crossAxisCount: (size.width / 44).round(),
-                children:
-                    snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
-              ),
-            );
-          }
+          WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
+            this.scrollController.position.didUpdateScrollPositionBy(0);
+            this.scrollController.jumpTo(0);
+          });
           return Container(
-            padding: const EdgeInsets.only(left: 20, top: 0, right: 20),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children:
-                  snapshot.data?.map((e) => _moodWidget(e)).toList() ?? [],
-            ),
-          );
+              padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  GridView.count(
+                    primary: false,
+                    controller: this.scrollController,
+                    physics: BouncingScrollPhysics(),
+                    crossAxisSpacing: 0,
+                    mainAxisSpacing: 0,
+                    crossAxisCount: ((size.width - 40) / 44).round(),
+                    children:
+                        snapshot.data?.map((e) => _moodWidget(e)).toList() ??
+                            [],
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 6.0,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom:
+                            BorderSide(width: 6.0, color: Colors.transparent),
+                      ),
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            const Color(0x10000000)
+                          ]),
+                    ),
+                  )
+                ],
+              ));
         } else if (snapshot.hasError) {
           if (this.widget.moodService.isApiDisabled) {
             return ApiIsDisabledWidget();

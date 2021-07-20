@@ -66,7 +66,11 @@ class SyApp extends StatelessWidget {
           accentColor: sySecondaryColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: 'TexGyreHeros',
-          scrollbarTheme: ScrollbarThemeData(isAlwaysShown: true),
+          scrollbarTheme: ScrollbarThemeData(
+              isAlwaysShown: true,
+              thickness: MaterialStateProperty.all(12.0),
+              showTrackOnHover: false,
+              radius: Radius.zero),
         ),
         home: HomePage(
           title: 'Share yours mood with anyone',

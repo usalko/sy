@@ -180,9 +180,12 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
       throw new UnimplementedError();
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: cards,
+    return Padding(
+      padding: EdgeInsets.only(top: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: cards,
+      ),
     );
   }
 
