@@ -1,4 +1,3 @@
-from app_moods.models import GeometryShape
 from rest_framework import serializers
 
 

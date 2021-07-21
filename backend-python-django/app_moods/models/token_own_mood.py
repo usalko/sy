@@ -4,7 +4,7 @@ from .own_mood import OwnMood
 from .mood import Mood
 
 
-class TokenOwnMood(Mood):
+class TokenOwnMood(models.Model):
 
     token = models.ForeignKey(
         Token, db_column='token_id', on_delete=models.CASCADE)

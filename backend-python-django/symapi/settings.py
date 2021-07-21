@@ -31,9 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'app_tokens.apps.AppTokensConfig',
-    'app_moods.apps.AppMoodsConfig',
-    'app_swagger.apps.AppSwaggerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_swagger',
+    'app_tokens',
+    'app_moods',
+    'app_swagger',
 ]
 
 MIDDLEWARE = [

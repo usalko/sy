@@ -6,10 +6,13 @@ from django.shortcuts import redirect
 from django.urls import include, path
 from rest_framework import routers
 from app_swagger.views import schema_view
-from app_moods.views import GeometryShapeViewSet
+from app_moods.views import HealthCheckViewSet, MoodViewSet
+from app_tokens.views import TokenViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register('Geometry', GeometryShapeViewSet)
+router.register('Geometry', HealthCheckViewSet, basename='Geometry')
+router.register('Token', TokenViewSet, basename='Token')
+router.register('', MoodViewSet, basename='')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
