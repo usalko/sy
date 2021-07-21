@@ -24,7 +24,7 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "shared_mood_geometry_shape")
+@Table(name = "shared_mood_geometry_shapes")
 public class SharedMoodGeometryShape extends MoodGeometryShape {
     @EmbeddedId
     @JsonIgnore
