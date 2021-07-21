@@ -7,5 +7,5 @@ class Token(models.Model):
     # created = models
 
     class Meta:
-        db_table = 'token'
-        app_label = 'sy'
+        db_table = 'tokens'
+        app_label = 'tokens'

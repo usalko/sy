@@ -1,11 +1,11 @@
-"""demo23 URL Configuration
+"""symapi URL Configuration
 
 """
 
 from django.shortcuts import redirect
 from django.urls import include, path
 from rest_framework import routers
-from demo23.sy import views
+from moods import views
 
 router = routers.DefaultRouter()
 router.register('Geometry', views.GeometryShapeViewSet)

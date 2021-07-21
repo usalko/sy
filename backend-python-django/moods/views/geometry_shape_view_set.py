@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import permissions
-from demo23.sy.models import GeometryShape
-from demo23.sy.serializers import GeometryShapeSerializer
+from moods.models import GeometryShape
+from moods.serializers import GeometryShapeSerializer
 
 
 class GeometryShapeViewSet(viewsets.ModelViewSet):

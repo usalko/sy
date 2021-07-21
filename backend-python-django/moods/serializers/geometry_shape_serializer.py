@@ -1,4 +1,4 @@
-from demo23.sy.models import GeometryShape
+from moods.models import GeometryShape
 from rest_framework import serializers
 
 
