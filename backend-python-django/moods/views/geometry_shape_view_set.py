@@ -9,6 +9,6 @@ class GeometryShapeViewSet(viewsets.ModelViewSet):
     """
        API endpoint that allows see all available geometry shapes.
        """
-    queryset = GeometryShape.objects.all()
+    queryset = GeometryShape.objects.all().order_by('id')
     serializer_class = GeometryShapeSerializer
     permission_classes = [permissions.AllowAny]

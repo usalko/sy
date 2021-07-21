@@ -44,6 +44,7 @@ if [ ! -d .venv ]; then
     fi
     .venv/bin/python3 .pip/get-pip.py
     .venv/bin/pip3 install -r requirements.txt
+    .venv/bin/pip3 install -r requirements-tests.txt
     .venv/bin/pip3 install -r requirements-dev.txt
 fi
 
@@ -134,6 +135,7 @@ fi
 if [ "x$COMMAND" == "xredeps" ]; then
     echo "Reinstall dependencies"
     .venv/bin/pip3 install -r requirements.txt
+    .venv/bin/pip3 install -r requirements-tests.txt
     .venv/bin/pip3 install -r requirements-dev.txt
 fi
 

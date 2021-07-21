@@ -1,12 +1,12 @@
-- model: sy.GeometryShape
+- model: moods.GeometryShape
   pk: 1
   fields:
     mnemonic: triangle
-- model: sy.GeometryShape
+- model: moods.GeometryShape
   pk: 2
   fields:
     mnemonic: square
-- model: sy.GeometryShape
+- model: moods.GeometryShape
   pk: 3
   fields:
     mnemonic: circle
