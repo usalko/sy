@@ -26,18 +26,22 @@ class MoodViewSet(viewsets.GenericViewSet):
     #     ]
     # )
 
-    @action(detail=False, methods=['get'], url_path='GetHistory', url_name='Get top 50 history events in reverse order by creation date')
+    @action(detail=False, methods=['get'], url_path='GetHistory')
     def get_history(self, request):
+        """Get top 50 history events in reverse order by creation date"""
         ...
 
-    @action(detail=False, methods=['get'], url_path='GetSharedMoods', url_name='Request all shared moods')
+    @action(detail=False, methods=['get'], url_path='GetSharedMoods')
     def get_shared_moods(self, request):
+        """Request all shared moods"""
         ...
 
-    @action(detail=False, methods=['post'], url_path='KeepMoodForNow', url_name='Keep your own mood for now')
+    @action(detail=False, methods=['post'], url_path='KeepMoodForNow')
     def keep_mood_for_now(self, request):
+        """Keep your own mood for now"""
         ...
 
-    @action(detail=False, methods=['post'], url_path='ShareMood', url_name='Share mood for anyone')
+    @action(detail=False, methods=['post'], url_path='ShareMood')
     def share_mood(self, request):
+        """Share mood for anyone"""
         ...
