@@ -5,7 +5,7 @@ class Mood(models.Model):
 
     class Meta:
         abstract = True
-        app_label = 'moods'
+        app_label = 'app_moods'
 
     def __str__(self):
         return self.name

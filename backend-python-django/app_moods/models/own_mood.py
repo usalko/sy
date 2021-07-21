@@ -3,13 +3,13 @@ from .mood import Mood
 from .geometry_shape import GeometryShape
 
 
-class SharedMood(Mood):
+class OwnMood(Mood):
 
     created = models.DateTimeField(
-        help_text='Timestamp when shared mood created')
+        help_text='Timestamp when own mood created')
     geometry_shape = models.ForeignKey(
         GeometryShape, db_column='geometry_shape_id', on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'shared_moods'
-        app_label = 'moods'
+        db_table = 'own_moods'
+        app_label = 'app_moods'

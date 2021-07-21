@@ -31,8 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'tokens.apps.TokensConfig',
-    'moods.apps.MoodsConfig',
+    'app_tokens.apps.AppTokensConfig',
+    'app_moods.apps.AppMoodsConfig',
+    'app_swagger.apps.AppSwaggerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

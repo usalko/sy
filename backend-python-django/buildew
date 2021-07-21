@@ -129,6 +129,7 @@ fi
 
 if [ "x$COMMAND" == "xmanage" ]; then
     echo "Run manage.py script manage.py $@"
+    #./buildew manage loaddata app_moods/fixtures/geometry_shapes.yaml
     .venv/bin/python3 manage.py $@
 fi
 

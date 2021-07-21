@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('tokens', '0001_initial'),
+        ('app_tokens', '0001_initial'),
     ]
 
     operations = [
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(help_text='Timestamp when own mood created')),
-                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='moods.geometryshape')),
+                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='app_moods.geometryshape')),
             ],
             options={
                 'db_table': 'own_moods',
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(help_text='Timestamp when shared mood created')),
-                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='moods.geometryshape')),
+                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='app_moods.geometryshape')),
             ],
             options={
                 'db_table': 'shared_moods',
@@ -49,8 +49,8 @@ class Migration(migrations.Migration):
             name='TokenOwnMood',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('own_mood', models.ForeignKey(db_column='own_mood_id', on_delete=django.db.models.deletion.CASCADE, to='moods.ownmood')),
-                ('token', models.ForeignKey(db_column='token_id', on_delete=django.db.models.deletion.CASCADE, to='tokens.token')),
+                ('own_mood', models.ForeignKey(db_column='own_mood_id', on_delete=django.db.models.deletion.CASCADE, to='app_moods.ownmood')),
+                ('token', models.ForeignKey(db_column='token_id', on_delete=django.db.models.deletion.CASCADE, to='app_tokens.token')),
             ],
             options={
                 'db_table': 'token_own_moods',
@@ -62,8 +62,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('index_in_list', models.IntegerField(help_text='Used for restore sparse list')),
                 ('color', models.IntegerField(help_text='Color in flutter 0xFF000000')),
-                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='moods.geometryshape')),
-                ('shared_mood', models.ForeignKey(db_column='shared_mood_id', on_delete=django.db.models.deletion.CASCADE, to='moods.sharedmood')),
+                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='app_moods.geometryshape')),
+                ('shared_mood', models.ForeignKey(db_column='shared_mood_id', on_delete=django.db.models.deletion.CASCADE, to='app_moods.sharedmood')),
             ],
             options={
                 'db_table': 'shared_mood_geometry_shapes',
@@ -75,8 +75,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('index_in_list', models.IntegerField(help_text='Used for restore sparse list')),
                 ('color', models.IntegerField(help_text='Color in flutter 0xFF000000')),
-                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='moods.geometryshape')),
-                ('own_mood', models.ForeignKey(db_column='own_mood_id', on_delete=django.db.models.deletion.CASCADE, to='moods.ownmood')),
+                ('geometry_shape', models.ForeignKey(db_column='geometry_shape_id', on_delete=django.db.models.deletion.CASCADE, to='app_moods.geometryshape')),
+                ('own_mood', models.ForeignKey(db_column='own_mood_id', on_delete=django.db.models.deletion.CASCADE, to='app_moods.ownmood')),
             ],
             options={
                 'db_table': 'own_mood_geometry_shapes',

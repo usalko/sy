@@ -1,5 +1,5 @@
 from django.db import models
-from tokens.models.token import Token
+from app_tokens.models.token import Token
 from .own_mood import OwnMood
 from .mood import Mood
 
@@ -14,4 +14,4 @@ class TokenOwnMood(Mood):
     class Meta:
         db_table = 'token_own_moods'
         unique_together = (('token', 'own_mood'),)
-        app_label = 'moods'
+        app_label = 'app_moods'

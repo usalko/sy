@@ -12,4 +12,4 @@ class GeometryShape(models.Model):
             models.UniqueConstraint(
                 fields=['mnemonic'], name='unique shame name')
         ]
-        app_label = 'moods'
+        app_label = 'app_moods'

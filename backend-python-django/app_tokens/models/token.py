@@ -8,4 +8,4 @@ class Token(models.Model):
 
     class Meta:
         db_table = 'tokens'
-        app_label = 'tokens'
+        app_label = 'app_tokens'

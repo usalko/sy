@@ -1,7 +1,7 @@
 from django.test import TestCase
 from faker import Faker
 
-from moods.models import GeometryShape
+from app_moods.models import GeometryShape
 
 fake = Faker()
 
