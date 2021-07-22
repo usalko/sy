@@ -35,12 +35,13 @@ class MoodViewSet(viewsets.GenericViewSet):
         if not token:
             raise Exception(
                 f'Invalid request token must be determined in query string')
-        if len(str(token)) != 36:
+        token_pk = str(token).strip('"')
+        if len(token_pk) != 36:
             raise Exception(
-                f'Invalid request token {token} has wrong length')
-        if not Token.objects.filter(pk=token).exists():
+                f'Invalid request token {token_pk} has wrong length')
+        if not Token.objects.filter(pk=token_pk).exists():
             raise Exception(
-                f'Token {token} did not register')
+                f'Token {token_pk} did not register')
 
     @action(detail=False, methods=['get'], url_path='GetHistory')
     def get_history(self, request):
@@ -64,7 +65,7 @@ class MoodViewSet(viewsets.GenericViewSet):
         token = request.query_params['token']
         self._check_token_and_throw_error_if_token_is_not_valid(token)
         serializer = OwnMoodSerializer([tom.own_mood for tom in TokenOwnMood.objects.filter(
-            token=Token.of(token)).order_by('-id')[:50]], many=True)
+            token=Token.of(token.strip('"'))).order_by('-id')[:50]], many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'], url_path='GetSharedMoods')
@@ -86,8 +87,8 @@ class MoodViewSet(viewsets.GenericViewSet):
                 content:
                   'application/json': {}
         '''
-        token = request.query_params['token']
-        self._check_token_and_throw_error_if_token_is_not_valid(token)
+        #token = request.query_params.get('token')
+        #self._check_token_and_throw_error_if_token_is_not_valid(token)
         serializer = SharedMoodSerializer(
             SharedMood.objects.all().order_by('-id')[:200], many=True)
         return Response(serializer.data)
@@ -118,7 +119,7 @@ class MoodViewSet(viewsets.GenericViewSet):
             '500':
                 description: Error occur during the process request
         '''
-        token = request.query_params['token']
+        token = request.query_params.get('token')
         self._check_token_and_throw_error_if_token_is_not_valid(token)
         serializer = OwnMoodSerializer(data=request.body)
         if not serializer.is_valid():

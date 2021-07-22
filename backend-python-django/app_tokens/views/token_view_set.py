@@ -64,8 +64,8 @@ class TokenViewSet(mixins.ListModelMixin,
 
         self.__lock.acquire(timeout=RANDOM_SEED_LOCK_TIMEOUT_IN_SECONDS)
         try:
-            seed(int.from_bytes(int(user_agent_hash).to_bytes(4, 'big') +
-                                int(random_seed).to_bytes(4, 'big'), 'big'))
+            seed(int.from_bytes(int(user_agent_hash).to_bytes(4, 'big', signed = True) +
+                                int(random_seed).to_bytes(4, 'big', signed = True), 'big'))
             token.id = UUID(bytes=(int.from_bytes(urandom(16), 'big') ^ getrandbits(128)).to_bytes(16, 'big'), version=4)
             token.created = datetime.now()  # Use local datetime
         finally:
