@@ -50,6 +50,7 @@ class MoodWidget extends StatefulWidget {
 class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
   Color screenPickerColor = Colors.red;
   Mood? mood;
+  static const LEFT_RIGHT_MARGIN = 16.0;
 
   @override
   void initState() {
@@ -99,7 +100,7 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
     );
 
     if (widget.viewModeService.screen == TheScreen.Screen1) {
-      var cardWidth = max(size.width, 740.0) / 3 - 30;
+      var cardWidth = max(size.width, 740.0) / 3 - (LEFT_RIGHT_MARGIN + LEFT_RIGHT_MARGIN);
       cards = [
         GestureDetector(
           onTap: () => setState(() {
@@ -196,8 +197,9 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
       throw new UnimplementedError();
     }
 
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(top: 6),
+      margin: EdgeInsets.only(left: LEFT_RIGHT_MARGIN, right: LEFT_RIGHT_MARGIN),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: cards,
@@ -218,7 +220,7 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
     return SizedBox(
       width: 200,
       child: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.only(top: 6),
         child: Card(
           color: Theme.of(context).canvasColor,
           elevation: 0,
