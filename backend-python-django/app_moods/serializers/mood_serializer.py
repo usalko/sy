@@ -1,13 +1,13 @@
-from app_moods.models import Mood
 from rest_framework import serializers
+
+from app_moods.models import Mood
+from app_moods.serializers import GeometryShapeSerializer
 
 
 class MoodSerializer(serializers.Serializer):
 
     created = serializers.DateTimeField()
-
-    def run_validation(self, data=None):
-        super().run_validation(data)
+    geometry_shape = GeometryShapeSerializer()
 
     def create(self, validated_data):
         return Mood(**validated_data)
@@ -18,4 +18,4 @@ class MoodSerializer(serializers.Serializer):
 
     class Meta:
         model = Mood
-        fields = ['created', 'geometry_shape']
+        fields = '__all__'

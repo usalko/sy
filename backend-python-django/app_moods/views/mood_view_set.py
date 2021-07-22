@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from rest_framework import status
 from rest_framework import mixins
 from rest_framework import viewsets
@@ -5,6 +7,7 @@ from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.fields import empty
+from rest_framework.parsers import JSONParser
 
 from app_moods.serializers import MoodSerializer
 from app_moods.serializers import OwnMoodSerializer
@@ -107,7 +110,7 @@ class MoodViewSet(viewsets.GenericViewSet):
               schema:
                   type: string
           requestBody:
-            description: Optional description in *Markdown*
+            description: your *own* mood
             required: true
             content:
               application/json:
@@ -121,7 +124,7 @@ class MoodViewSet(viewsets.GenericViewSet):
         '''
         token = request.query_params.get('token')
         self._check_token_and_throw_error_if_token_is_not_valid(token)
-        serializer = OwnMoodSerializer(data=request.body)
+        serializer = OwnMoodSerializer(data=JSONParser().parse(BytesIO(request.body)))
         if not serializer.is_valid():
             return Response(serializer.error_messages, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         own_mood = serializer.create()
@@ -129,5 +132,34 @@ class MoodViewSet(viewsets.GenericViewSet):
 
     @ action(detail=False, methods=['post'], url_path='ShareMood')
     def share_mood(self, request):
-        """Share mood for anyone"""
-        ...
+        '''
+        post:
+          description: Share your own mood
+          summary: Share your mood with anyone
+          parameters:
+            - name: token
+              in: query
+              description: token
+              required: true
+              schema:
+                  type: string
+          requestBody:
+            description: your mood for *share*
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Mood'
+          responses:
+            '200':
+                description: OK
+            '500':
+                description: Error occur during the process request
+        '''
+        token = request.query_params.get('token')
+        self._check_token_and_throw_error_if_token_is_not_valid(token)
+        serializer = SharedMoodSerializer(data=JSONParser().parse(BytesIO(request.body)))
+        if not serializer.is_valid():
+            return Response(serializer.error_messages, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        shared_mood = serializer.create()
+        return Response('')
