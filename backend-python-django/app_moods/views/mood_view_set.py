@@ -1,6 +1,10 @@
-from rest_framework import mixins, viewsets, permissions
+from rest_framework import status
+from rest_framework import mixins
+from rest_framework import viewsets
+from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.fields import empty
 
 from app_moods.serializers import MoodSerializer
 from app_moods.serializers import OwnMoodSerializer
@@ -90,8 +94,37 @@ class MoodViewSet(viewsets.GenericViewSet):
 
     @ action(detail=False, methods=['post'], url_path='KeepMoodForNow')
     def keep_mood_for_now(self, request):
-        """Keep your own mood for now"""
-        ...
+        '''
+        post:
+          description: Save your own mood
+          summary: Keep your own mood for now
+          parameters:
+            - name: token
+              in: query
+              description: token
+              required: true
+              schema:
+                  type: string
+          requestBody:
+            description: Optional description in *Markdown*
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Mood'
+          responses:
+            '200':
+                description: OK
+            '500':
+                description: Error occur during the process request
+        '''
+        token = request.query_params['token']
+        self._check_token_and_throw_error_if_token_is_not_valid(token)
+        serializer = OwnMoodSerializer(data=request.body)
+        if not serializer.is_valid():
+            return Response(serializer.error_messages, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        own_mood = serializer.create()
+        return Response('')
 
     @ action(detail=False, methods=['post'], url_path='ShareMood')
     def share_mood(self, request):
