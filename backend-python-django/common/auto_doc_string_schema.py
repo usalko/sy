@@ -17,7 +17,10 @@ class AutoDocStringSchema(AutoSchema):
             method_name = getattr(self.view, 'action', method.lower())
             method_docstring = getattr(self.view, method_name, None).__doc__
             try:
-                self._path_methods_docs[key] = safe_load(method_docstring)
+                result = safe_load(method_docstring)
+                if isinstance(result, str):
+                    result = {method: {'description': result}}
+                self._path_methods_docs[key] = result
             except ScannerError:
                 self._path_methods_docs[key] = {}
         return self._path_methods_docs[key]

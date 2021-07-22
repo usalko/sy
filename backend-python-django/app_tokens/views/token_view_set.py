@@ -4,12 +4,14 @@ from random import seed
 from random import getrandbits
 from uuid import UUID
 from datetime import datetime
+
 from rest_framework import mixins, viewsets, permissions
-from app_tokens.models import Token
-from app_tokens.serializers import TokenSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from common import AutoDocStringSchema
+from app_tokens.models import Token
+from app_tokens.serializers import TokenSerializer
 
 
 RANDOM_SEED_LOCK_TIMEOUT_IN_SECONDS = 1

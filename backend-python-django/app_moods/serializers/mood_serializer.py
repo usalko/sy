@@ -6,5 +6,4 @@ class MoodSerializer(serializers.Serializer):
 
     class Meta:
         model = Mood
-        fields = ['created']
-
+        fields = ['created', 'geometry_shape']
