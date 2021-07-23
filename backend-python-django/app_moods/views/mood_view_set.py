@@ -1,6 +1,8 @@
 from io import BytesIO
 from datetime import datetime
 
+from django.db import transaction
+
 from rest_framework import status
 from rest_framework import mixins
 from rest_framework import viewsets
@@ -18,6 +20,7 @@ from common import AutoDocStringSchema
 from app_tokens.models import Token
 from app_moods.models import GeometryShape
 from app_moods.models import TokenOwnMood
+from app_moods.models import Mood
 from app_moods.models import OwnMood
 from app_moods.models import OwnMoodGeometryShape
 from app_moods.models import SharedMood
@@ -69,7 +72,7 @@ class MoodViewSet(viewsets.GenericViewSet):
         token = request.query_params['token']
         self._check_token_and_throw_error_if_token_is_not_valid(token)
         serializer = OwnMoodSerializer([tom.own_mood for tom in TokenOwnMood.objects.filter(
-            token=Token.of(token.strip('"'))).order_by('-id')[:50]], many=True)
+            token=Token.of(token.strip('"'))).order_by('-id')[:50]], many=True, context={'request': request})
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'], url_path='GetSharedMoods')
@@ -92,9 +95,9 @@ class MoodViewSet(viewsets.GenericViewSet):
                   'application/json': {}
         '''
         #token = request.query_params.get('token')
-        #self._check_token_and_throw_error_if_token_is_not_valid(token)
+        # self._check_token_and_throw_error_if_token_is_not_valid(token)
         serializer = SharedMoodSerializer(
-            SharedMood.objects.all().order_by('-id')[:200], many=True)
+            SharedMood.objects.all().order_by('-id')[:200], many=True, context={'request': request})
         return Response(serializer.data)
 
     @ action(detail=False, methods=['post'], url_path='KeepMoodForNow')
@@ -127,11 +130,17 @@ class MoodViewSet(viewsets.GenericViewSet):
         self._check_token_and_throw_error_if_token_is_not_valid(token)
         bodyData = JSONParser().parse(BytesIO(request.body))
         if not bodyData.get('created'):
-          bodyData['created'] = datetime.now().isoformat()
+            bodyData['created'] = datetime.now().isoformat()
         serializer = OwnMoodSerializer(data=bodyData)
         if not serializer.is_valid():
             return Response(serializer.error_messages, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         own_mood = serializer.create()
+        self._prepare_mood(own_mood)
+        with transaction.atomic():
+            own_mood.save()
+            for own_mood_geometry_shape in own_mood.mood_geometry_shapes:
+                own_mood_geometry_shape.save()
+            TokenOwnMood(token=Token(token), own_mood=own_mood).save()
         return Response('')
 
     @ action(detail=False, methods=['post'], url_path='ShareMood')
@@ -164,9 +173,31 @@ class MoodViewSet(viewsets.GenericViewSet):
         self._check_token_and_throw_error_if_token_is_not_valid(token)
         bodyData = JSONParser().parse(BytesIO(request.body))
         if not bodyData.get('created'):
-          bodyData['created'] = datetime.now().isoformat()
+            bodyData['created'] = datetime.now().isoformat()
         serializer = SharedMoodSerializer(data=bodyData)
         if not serializer.is_valid():
             return Response(serializer.error_messages, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         shared_mood = serializer.create()
+        self._prepare_mood(shared_mood)
+        with transaction.atomic():
+            shared_mood.save()
+            for shared_mood_geometry_shape in shared_mood.mood_geometry_shapes:
+                shared_mood_geometry_shape.save()
         return Response('')
+
+    def _prepare_mood(self, mood: Mood):
+        # Remove id
+        mood.id = None
+        # Restore geometry shapes
+        shapes = {
+            geometry_shape.mnemonic: geometry_shape.id for geometry_shape in GeometryShape.objects.all()}
+        mood.geometry_shape.id = shapes[mood.geometry_shape.mnemonic]
+        if mood.mood_geometry_shapes:
+            for mood_geometry_shape in mood.mood_geometry_shapes:
+                if mood_geometry_shape:
+                    if isinstance(mood_geometry_shape, OwnMoodGeometryShape):
+                        mood_geometry_shape.own_mood = mood
+                    if isinstance(mood_geometry_shape, SharedMoodGeometryShape):
+                        mood_geometry_shape.shared_mood = mood
+                    mood_geometry_shape.geometry_shape.id = shapes[
+                        mood_geometry_shape.geometry_shape.mnemonic]

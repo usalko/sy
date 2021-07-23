@@ -9,6 +9,14 @@ class SharedMoodSerializer(serializers.HyperlinkedModelSerializer, MoodSerialize
 
     mood_geometry_shapes = SharedMoodGeometryShapesSerializer()
 
+    def to_representation(self, instance):
+        result = {
+            'created': instance.created.isoformat(),
+            'geometry_shape': self.fields['geometry_shape'].to_representation(instance.geometry_shape),
+            'mood_geometry_shapes': []
+        }
+        return result
+
     def create(self):
         shapes = self.validated_data.pop('mood_geometry_shapes')
         result = SharedMood(**self.validated_data)

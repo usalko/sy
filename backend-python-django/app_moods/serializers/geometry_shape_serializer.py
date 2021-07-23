@@ -10,7 +10,7 @@ from app_moods.models import GeometryShape
 class GeometryShapeSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-        return instance.mnemonic
+        return {'mnemonic': instance.mnemonic}
 
     def to_internal_value(self, data):
         if not isinstance(data, Mapping):

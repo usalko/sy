@@ -9,6 +9,14 @@ class OwnMoodSerializer(serializers.HyperlinkedModelSerializer, MoodSerializer):
 
     mood_geometry_shapes = OwnMoodGeometryShapesSerializer()
 
+    def to_representation(self, instance):
+        result = {
+            'created': instance.created.isoformat(),
+            'geometry_shape': self.fields['geometry_shape'].to_representation(instance.geometry_shape),
+            'mood_geometry_shapes': []
+        }
+        return result
+
     def create(self):
         shapes = self.validated_data.pop('mood_geometry_shapes')
         result = OwnMood(**self.validated_data)
