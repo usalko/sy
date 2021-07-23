@@ -32,6 +32,12 @@ class ResponseProcessor {
             .map((e) => Mood.fromJson(processMoodForSpringPlatform(e)))
             .toList();
       }
+      if ((response.headers['pragma'] ?? '')
+          .contains('Backend-Platform-Identity=Django')) {
+        return processResponseForDjangoPlatform(response.body)
+            .map((e) => Mood.fromJson(processMoodForDjangoPlatform(e)))
+            .toList();
+      }
       return (jsonDecode(response.body) as List<dynamic>)
           .map((e) => Mood.fromJson(e))
           .toList();
@@ -77,4 +83,43 @@ class ResponseProcessor {
     }
     throw UnimplementedError();
   }
+
+  Map<String, dynamic> processMoodForDjangoPlatform(
+      Map<String, dynamic> element) {
+    var result = Map<String, dynamic>();
+    result['id'] = "${element['id']}";
+    result['created'] = element['created'];
+    result['kind'] = element['geometry_shape']?['mnemonic'];
+    result['content'] = element['mood_geometry_shapes']
+        ?.map(
+          (e) => processGeometryForDjangoPlatform(e),
+        )
+        .toList();
+    return result;
+  }
+
+  Map<String, dynamic>? processGeometryForDjangoPlatform(
+      Map<String, dynamic>? element) {
+    if (element == null) {
+      return null;
+    }
+    var result = Map<String, dynamic>();
+    result['shape'] = element['geometry_shape']?['mnemonic'];
+    result['color'] = (element['color'] as int).toUnsigned(32);
+    return result;
+  }
+
+  List<dynamic> processResponseForDjangoPlatform(String body) {
+    var jsonedResponse = jsonDecode(response.body);
+    // Detect pagination
+    if (jsonedResponse is Map && jsonedResponse['content'] is List) {
+      return jsonedResponse['content'];
+    }
+    // Detect array
+    if (jsonedResponse is List) {
+      return jsonedResponse;
+    }
+    throw UnimplementedError();
+  }
+
 }

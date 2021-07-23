@@ -17,6 +17,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/src/model/backend_platform_identity.dart';
 import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/mood.dart';
 import 'package:frontend/src/service/request_processor.dart';
@@ -39,11 +40,14 @@ class MoodServiceAdapter {
   }
 
   Future<http.Response> post(Uri url,
-      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+      {Map<String, String>? headers,
+      Object? body,
+      Encoding? encoding,
+      BackendPlatformIdentity? backendPlatformIdentity}) {
     if (INTEGRATION_TEST_MODE) {
       return integrationTestSupport(url, headers);
     }
-    return RequestProcessor(_client).post(url, headers, body, encoding);
+    return RequestProcessor(_client).post(url, headers, body, encoding, backendPlatformIdentity);
   }
 
   Future<http.Response> integrationTestSupport(

@@ -17,6 +17,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:frontend/src/model/backend_platform_identity.dart';
 import 'package:frontend/src/model/geometry.dart';
 import 'package:frontend/src/model/geometry_shape.dart';
 import 'package:frontend/src/model/mood.dart';
@@ -28,15 +29,26 @@ class RequestProcessor {
   RequestProcessor(this.client);
 
   Future<http.Response> post(
-      Uri url, Map<String, String>? headers, Object? body, Encoding? encoding) {
+      Uri url,
+      Map<String, String>? headers,
+      Object? body,
+      Encoding? encoding,
+      BackendPlatformIdentity? backendPlatformIdentity) {
     var requestHeaders = headers ?? {};
     requestHeaders[HttpHeaders.contentTypeHeader] =
         'application/json; charset=UTF-8';
-    if (body is Mood) {
+    if (body is Mood && backendPlatformIdentity == BackendPlatformIdentity.Spring) {
       requestHeaders['pragma'] = 'Backend-Platform-Identity=Spring;';
       return this.client.post(url,
           headers: requestHeaders,
           body: jsonEncode(processMoodForSpringPlatform(body)),
+          encoding: encoding);
+    }
+    if (body is Mood && backendPlatformIdentity == BackendPlatformIdentity.Django) {
+      requestHeaders['pragma'] = 'Backend-Platform-Identity=Django;';
+      return this.client.post(url,
+          headers: requestHeaders,
+          body: jsonEncode(processMoodForDjangoPlatform(body)),
           encoding: encoding);
     }
     return this
@@ -65,4 +77,27 @@ class RequestProcessor {
     result['color'] = geometry.color.toSigned(32);
     return result;
   }
+
+  Map<String, dynamic> processMoodForDjangoPlatform(Mood mood) {
+    var result = Map<String, dynamic>();
+    result['id'] = int.tryParse(mood.id);
+    result['created'] = mood.created;
+    result['geometry_shape'] = {'mnemonic': GeometryShapeExt.toJson(mood.kind)};
+    result['mood_geometry_shapes'] =
+        mood.content.map((e) => processGeometryForDjangoPlatform(e)).toList();
+    return result;
+  }
+
+  Map<String, dynamic>? processGeometryForDjangoPlatform(Geometry? geometry) {
+    if (geometry == null) {
+      return null;
+    }
+    var result = Map<String, dynamic>();
+    result['geometry_shape'] = {
+      'mnemonic': GeometryShapeExt.toJson(geometry.shape)
+    };
+    result['color'] = geometry.color.toSigned(32);
+    return result;
+  }
+
 }

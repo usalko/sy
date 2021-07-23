@@ -16,6 +16,7 @@
 
 import 'dart:math';
 
+import 'package:frontend/src/model/backend_platform_identity.dart';
 import 'package:frontend/src/model/mood.dart';
 
 import 'package:event/event.dart';
@@ -30,6 +31,7 @@ const API_ENDPOINT = const String.fromEnvironment('API_ENDPOINT',
 
 /// Represents a global application state
 class MoodService {
+  BackendPlatformIdentity? backendPlatformIdentity;
   bool _isApiDisabled = DEFAULT_VALUE_FOR_IS_API_DISABLED;
   Future<String>? _token;
 
@@ -72,7 +74,8 @@ class MoodService {
     }
     final response = await MoodServiceAdapter().post(
         Uri.parse('$API_ENDPOINT/KeepMoodForNow?token=${await token}'),
-        body: mood);
+        body: mood,
+        backendPlatformIdentity: this.backendPlatformIdentity);
     if (response.statusCode == 200) {
       return true;
     }
@@ -85,7 +88,8 @@ class MoodService {
     }
     final response = await MoodServiceAdapter().post(
         Uri.parse('$API_ENDPOINT/ShareMood?token=${await token}'),
-        body: mood);
+        body: mood,
+        backendPlatformIdentity: this.backendPlatformIdentity);
     if (response.statusCode == 200) {
       return true;
     }
@@ -100,10 +104,7 @@ class MoodService {
     var localToken = sharedPreferenses.getString('token');
     if (localToken != null &&
         localToken.length == 36 &&
-        String.fromCharCodes((await MoodServiceAdapter().get(Uri.parse(
-                    '$API_ENDPOINT/Token/Validation?token=$localToken')))
-                .bodyBytes) ==
-            'true') {
+        await this._isValidToken(localToken)) {
       return localToken;
     }
     var randomGenerator = Random(DateTime.now().microsecondsSinceEpoch);
@@ -114,10 +115,18 @@ class MoodService {
           '$API_ENDPOINT/Token?user-agent-hash=$userAgentHash&seed=$randomSeed'),
     );
     if (response.statusCode == 200) {
-      var remoteToken = response.body;
+      var remoteToken = response.body.replaceAll(RegExp(r'^\"|\"$'), '');
       sharedPreferenses.setString('token', remoteToken);
       return remoteToken;
     }
     throw Exception('Failed to request token');
+  }
+
+  Future<bool> _isValidToken(String localToken) async {
+    var response = await MoodServiceAdapter()
+        .get(Uri.parse('$API_ENDPOINT/Token/Validation?token=$localToken'));
+    // Refresh platform identity for senders
+    this.backendPlatformIdentity = BackendPlatformIdentityExt.fromHeader(response.headers['pragma'] ?? '');
+    return String.fromCharCodes(response.bodyBytes) == 'true';
   }
 }
