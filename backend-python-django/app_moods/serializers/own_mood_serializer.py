@@ -13,7 +13,7 @@ class OwnMoodSerializer(serializers.HyperlinkedModelSerializer, MoodSerializer):
         result = {
             'created': instance.created.isoformat(),
             'geometry_shape': self.fields['geometry_shape'].to_representation(instance.geometry_shape),
-            'mood_geometry_shapes': []
+            'mood_geometry_shapes': self.to_representation_mood_geometry_shapes(instance.ownmoodgeometryshape_set.all())
         }
         return result
 
