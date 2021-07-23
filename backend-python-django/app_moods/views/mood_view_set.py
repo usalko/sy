@@ -1,4 +1,5 @@
 from io import BytesIO
+from datetime import datetime
 
 from rest_framework import status
 from rest_framework import mixins
@@ -124,7 +125,10 @@ class MoodViewSet(viewsets.GenericViewSet):
         '''
         token = request.query_params.get('token')
         self._check_token_and_throw_error_if_token_is_not_valid(token)
-        serializer = OwnMoodSerializer(data=JSONParser().parse(BytesIO(request.body)))
+        bodyData = JSONParser().parse(BytesIO(request.body))
+        if not bodyData.get('created'):
+          bodyData['created'] = datetime.now().isoformat()
+        serializer = OwnMoodSerializer(data=bodyData)
         if not serializer.is_valid():
             return Response(serializer.error_messages, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         own_mood = serializer.create()
@@ -158,7 +162,10 @@ class MoodViewSet(viewsets.GenericViewSet):
         '''
         token = request.query_params.get('token')
         self._check_token_and_throw_error_if_token_is_not_valid(token)
-        serializer = SharedMoodSerializer(data=JSONParser().parse(BytesIO(request.body)))
+        bodyData = JSONParser().parse(BytesIO(request.body))
+        if not bodyData.get('created'):
+          bodyData['created'] = datetime.now().isoformat()
+        serializer = SharedMoodSerializer(data=bodyData)
         if not serializer.is_valid():
             return Response(serializer.error_messages, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         shared_mood = serializer.create()
