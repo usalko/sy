@@ -68,26 +68,24 @@ echo $COMMAND ===========
 echo COMMAND
 
 if [ "x$COMMAND" == "xbuild" ]; then
-    [ -d ~/.m2 ] || mkdir ~/.m2
-    docker run --rm -it -v ${PWD}:/build -u $(id -u ${USER}):$(id -g ${USER}) -v ~/.m2:/.m2 -e MAVEN_OPTS="-Dmaven.repo.local=/.m2" --workdir /build maven:3.8.1 mvn package
     docker build -t demo2/demo23:latest .
 fi
 
 if [ "x$COMMAND" == "xbuild-demo" ]; then
+    rm -fr .pub-build
+    mkdir -p .pub-build
     CURRENT_FOLDER=$PWD
     cd ../frontend
     ./buildew build
     cd $CURRENT_FOLDER
-    [ -d ~/.m2 ] || mkdir ~/.m2
-    docker run --rm -it -v ${PWD}:/build -u $(id -u ${USER}):$(id -g ${USER}) -v ~/.m2:/.m2 -e MAVEN_OPTS="-Dmaven.repo.local=/.m2" --workdir /build maven:3.8.1 mvn package
-    cp -fr ../frontend/build/web target/
-    docker build -t iusalko/demo213:latest . -f Dockerfile.212
+    cp -fr ../frontend/build/web .pub-build
+    docker build -t iusalko/demo213:latest . -f Dockerfile.213
 fi
 
 if [ "x$COMMAND" == "xrun" ]; then
     echo 'Run docker image demo23'
     docker container rm demo23
-    docker run -p 8080 -l demo23 --name demo23 demo2/demo23:latest
+    docker run -p 8000 -l demo23 --name demo23 demo2/demo23:latest
 fi
 
 if [ "x$COMMAND" == "xrun-demo" ]; then

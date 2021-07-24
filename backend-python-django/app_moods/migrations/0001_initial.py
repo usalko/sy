@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='GeometryShape',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('mnemonic', models.CharField(help_text='Unique name for geometric shape', max_length=255)),
+                ('mnemonic', models.CharField(help_text='Unique name for geometric shape', max_length=63)),
             ],
             options={
                 'db_table': 'geometry_shapes',

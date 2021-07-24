@@ -1,0 +1,12 @@
+.pip
+.venv
+.vscode
+__pycache__
+.env
+buildew
+#.pub-build
+#nginx.213
+requirements-dev.txt
+requirements-tests.txt
+.gitignore
+*.sqlite3

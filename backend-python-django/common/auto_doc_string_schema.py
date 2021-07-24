@@ -1,7 +1,6 @@
 from yaml import safe_load
 from yaml.scanner import ScannerError
 from rest_framework.schemas.openapi import AutoSchema
-from coreapi.document import Link
 
 
 class AutoDocStringSchema(AutoSchema):
@@ -27,10 +26,12 @@ class AutoDocStringSchema(AutoSchema):
 
     def get_components(self, path, method):
         components = super().get_components(path, method)
-        components.update(self._documentation(path, method).get('components', {}))
+        components.update(self._documentation(
+            path, method).get('components', {}))
         return components
 
     def get_operation(self, path, method):
         operation = super().get_operation(path, method)
-        operation.update(self._documentation(path, method).get(method.lower(), {}))
+        operation.update(self._documentation(
+            path, method).get(method.lower(), {}))
         return operation

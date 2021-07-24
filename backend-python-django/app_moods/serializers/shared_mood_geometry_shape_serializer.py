@@ -30,7 +30,7 @@ class SharedMoodGeometryShapesSerializer(serializers.Serializer):
         self.item_serializer_type = SharedMoodGeometryShapeSerializer
 
     def to_representation(self, instance):
-        return []
+        raise NotImplementedError()
 
     def to_internal_value(self, data):
         if isinstance(data, bytes):
@@ -38,10 +38,7 @@ class SharedMoodGeometryShapesSerializer(serializers.Serializer):
         else:
             mapped_data = data
 
-        if isinstance(data, Iterable):
-            return [self._create_item(data_item, index) for index, data_item in enumerate(data) if not(data_item is None)]
-
-        return []
+        return [self._create_item(data_item, index) for index, data_item in enumerate(data) if not(data_item is None)]
 
     def _create_item(self, data: Mapping, index: int):
         data['index_in_list'] = index
