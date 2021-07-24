@@ -1,9 +1,23 @@
-from rest_framework import mixins, viewsets, permissions
-
-from common import AutoDocStringSchema
+# Sy (Share your mood with anyone)
+# Copyright (C) July 2021 Ivan Usalko <ivict@rambler.ru>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http:#www.gnu.org/licenses/>.
 
 from app_moods.models import GeometryShape
 from app_moods.serializers import GeometryShapeSerializer
+from common import AutoDocStringSchema
+from rest_framework import mixins, permissions, viewsets
 
 
 class HealthCheckViewSet(mixins.ListModelMixin,
@@ -27,7 +41,7 @@ class HealthCheckViewSet(mixins.ListModelMixin,
             '200':
                 description: List of geometry shapes
                 content:
-                  'application/json': ""
+                  'application/json': []
         '''
         response = super().list(request, *args, **kwargs)
         return response

@@ -2,13 +2,13 @@
 
 """
 
+from app_moods.views import HealthCheckViewSet, MoodViewSet
+from app_swagger.views import schema_view
+from app_tokens.views import TokenViewSet
 from django.shortcuts import redirect
 from django.urls import include, path
-from rest_framework import routers
-from app_swagger.views import schema_view
-from app_moods.views import HealthCheckViewSet, MoodViewSet
-from app_tokens.views import TokenViewSet
 from django.views.generic import TemplateView
+from rest_framework import routers
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('Geometry', HealthCheckViewSet, basename='Geometry')
@@ -25,6 +25,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('swagger-ui/', TemplateView.as_view(
         template_name='swagger-ui.html',
-        extra_context={'schema_url':'openapi-schema'}
+        extra_context={'schema_url': 'openapi-schema'}
     ), name='swagger-ui'),
 ]

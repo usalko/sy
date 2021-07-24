@@ -14,5 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http:#www.gnu.org/licenses/>.
 
-from .health_check_view_set import *
-from .mood_view_set import *
+from django.test import TestCase
+
+
+class TokenViewSetTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        """Quickly set up data for the whole TestCase"""
+        pass
+
+    def test_create_models(self):
+        """Creating a Geometry object"""
+        # In test methods, use the variables created above
+        # triangle_shape = GeometryShape.objects.create(
+        #     mnemonic='triangle',
+        # )
+        # #another_model = AnotherModel.objects.get(my_model=test_object)
+        # self.assertEqual(triangle_shape.mnemonic, 'triangle')
+        pass

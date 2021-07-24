@@ -1,18 +1,31 @@
-from os import urandom
-from threading import Lock
-from random import seed
-from random import getrandbits
-from uuid import UUID
+# Sy (Share your mood with anyone)
+# Copyright (C) July 2021 Ivan Usalko <ivict@rambler.ru>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http:#www.gnu.org/licenses/>.
+
 from datetime import datetime
+from os import urandom
+from random import getrandbits, seed
+from threading import Lock
+from uuid import UUID
 
-from rest_framework import mixins, viewsets, permissions
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
-from common import AutoDocStringSchema
 from app_tokens.models import Token
 from app_tokens.serializers import TokenSerializer
-
+from common import AutoDocStringSchema
+from rest_framework import mixins, permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 RANDOM_SEED_LOCK_TIMEOUT_IN_SECONDS = 1
 
@@ -50,7 +63,7 @@ class TokenViewSet(mixins.ListModelMixin,
             '200':
                 description: Token as string
                 content:
-                  'application/json': ""
+                  'application/json': []
         '''
         user_agent_hash = request.query_params['user-agent-hash']
         random_seed = request.query_params['seed']
@@ -64,9 +77,10 @@ class TokenViewSet(mixins.ListModelMixin,
 
         self.__lock.acquire(timeout=RANDOM_SEED_LOCK_TIMEOUT_IN_SECONDS)
         try:
-            seed(int.from_bytes(int(user_agent_hash).to_bytes(4, 'big', signed = True) +
-                                int(random_seed).to_bytes(4, 'big', signed = True), 'big'))
-            token.id = UUID(bytes=(int.from_bytes(urandom(16), 'big') ^ getrandbits(128)).to_bytes(16, 'big'), version=4)
+            seed(int.from_bytes(int(user_agent_hash).to_bytes(4, 'big', signed=True) +
+                                int(random_seed).to_bytes(4, 'big', signed=True), 'big'))
+            token.id = UUID(bytes=(int.from_bytes(urandom(16), 'big') ^ getrandbits(
+                128)).to_bytes(16, 'big'), version=4)
             token.created = datetime.now()  # Use local datetime
         finally:
             self.__lock.release()
@@ -92,7 +106,7 @@ class TokenViewSet(mixins.ListModelMixin,
             '200':
                 description: Boolean value
                 content:
-                  'application/json': true
+                  'application/json': []
         '''
         token = request.query_params['token']
         if not token:

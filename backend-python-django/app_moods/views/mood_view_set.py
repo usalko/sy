@@ -1,30 +1,35 @@
-from io import BytesIO
+# Sy (Share your mood with anyone)
+# Copyright (C) July 2021 Ivan Usalko <ivict@rambler.ru>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http:#www.gnu.org/licenses/>.
+
 from datetime import datetime
+from io import BytesIO
 
+from app_moods.models import (GeometryShape, Mood, OwnMood,
+                              OwnMoodGeometryShape, SharedMood,
+                              SharedMoodGeometryShape, TokenOwnMood)
+from app_moods.serializers import (MoodSerializer, OwnMoodSerializer,
+                                   SharedMoodSerializer)
+from app_tokens.models import Token
+from common import AutoDocStringSchema
 from django.db import transaction
-
-from rest_framework import status
-from rest_framework import mixins
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.fields import empty
 from rest_framework.parsers import JSONParser
-
-from app_moods.serializers import MoodSerializer
-from app_moods.serializers import OwnMoodSerializer
-from app_moods.serializers import SharedMoodSerializer
-
-from common import AutoDocStringSchema
-from app_tokens.models import Token
-from app_moods.models import GeometryShape
-from app_moods.models import TokenOwnMood
-from app_moods.models import Mood
-from app_moods.models import OwnMood
-from app_moods.models import OwnMoodGeometryShape
-from app_moods.models import SharedMood
-from app_moods.models import SharedMoodGeometryShape
+from rest_framework.response import Response
 
 
 class MoodViewSet(viewsets.GenericViewSet):
