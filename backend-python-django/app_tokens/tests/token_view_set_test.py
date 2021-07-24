@@ -14,7 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http:#www.gnu.org/licenses/>.
 
-from django.test import TestCase
+from os import environ
+from uuid import UUID
+
+from app_tokens.views.token_view_set import TokenViewSet
+from django.test import TestCase, runner
+from rest_framework.test import APIRequestFactory
 
 
 class TokenViewSetTest(TestCase):
@@ -24,12 +29,21 @@ class TokenViewSetTest(TestCase):
         """Quickly set up data for the whole TestCase"""
         pass
 
-    def test_create_models(self):
-        """Creating a Geometry object"""
-        # In test methods, use the variables created above
-        # triangle_shape = GeometryShape.objects.create(
-        #     mnemonic='triangle',
-        # )
-        # #another_model = AnotherModel.objects.get(my_model=test_object)
-        # self.assertEqual(triangle_shape.mnemonic, 'triangle')
-        pass
+    def test_request_token(self):
+        """Request new token"""
+        request = APIRequestFactory().get(
+            '?', data={'user-agent-hash': -1, 'seed': 0})
+        tested_view = TokenViewSet.as_view({'get': 'list'})
+        response = tested_view(request)
+        token = response.data
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(UUID(token, version=4))
+        return token
+
+    def test_token_validation(self):
+        """Token validation"""
+        token = self.test_request_token()
+        request = APIRequestFactory().get('?', data={'token': token})
+        tested_view = TokenViewSet.as_view({'get': 'validation'})
+        response = tested_view(request)
+        self.assertEqual(response.status_code, 200)

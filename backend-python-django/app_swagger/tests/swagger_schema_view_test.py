@@ -14,7 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http:#www.gnu.org/licenses/>.
 
+from collections.abc import Mapping
+
+from app_swagger.views.swagger_schema_view import SwaggerSchemaView
 from django.test import TestCase
+from rest_framework.test import APIRequestFactory
 
 
 class SwaggerSchemaViewTest(TestCase):
@@ -24,12 +28,22 @@ class SwaggerSchemaViewTest(TestCase):
         """Quickly set up data for the whole TestCase"""
         pass
 
-    def test_create_models(self):
-        """Creating a Geometry object"""
-        # # In test methods, use the variables created above
-        # triangle_shape = GeometryShape.objects.create(
-        #     mnemonic='triangle',
-        # )
-        # #another_model = AnotherModel.objects.get(my_model=test_object)
-        # self.assertEqual(triangle_shape.mnemonic, 'triangle')
-        pass
+    def test_request_schema(self):
+        """Request openapi schema"""
+        request = APIRequestFactory().get("")
+        tested_view = SwaggerSchemaView.as_view()
+        response = tested_view(request)
+        output_json = response.data
+        self.assertTrue(isinstance(output_json, Mapping))
+        self.assertIsNotNone(output_json.get('paths'))
+        self.assertIsNotNone(output_json.get('paths').get('/api/Geometry'))
+        self.assertIsNotNone(output_json.get('paths').get('/api/Token'))
+        self.assertIsNotNone(output_json.get(
+            'paths').get('/api/Token/Validation'))
+        self.assertIsNotNone(output_json.get('paths').get('/api/GetHistory'))
+        self.assertIsNotNone(output_json.get(
+            'paths').get('/api/GetSharedMoods'))
+        self.assertIsNotNone(output_json.get(
+            'paths').get('/api/KeepMoodForNow'))
+        self.assertIsNotNone(output_json.get('paths').get('/api/ShareMood'))
+        self.assertEqual(response.status_code, 200)

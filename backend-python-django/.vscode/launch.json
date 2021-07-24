@@ -21,6 +21,49 @@
             ],
             "django": true,
             "justMyCode": false
-        }
-    ]
+        },
+        {
+            "name": "Python: Django (App moods test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "test",
+                "app_moods.tests.${fileBasenameNoExtension}"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Django (App swagger test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "test",
+                "app_swagger.tests.${fileBasenameNoExtension}"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Django (App tokens test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "test",
+                "app_tokens.tests.${fileBasenameNoExtension}"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+   ]
 }
