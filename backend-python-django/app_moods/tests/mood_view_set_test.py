@@ -61,3 +61,37 @@ class MoodViewSetTest(TestCase):
                          msg=f'Output is: {response}')
         output_json = response.data
         self.assertIsNotNone(output_json)
+
+    def test_share_mood(self):
+        """Creating a Geometry object"""
+        request = APIRequestFactory().post('?token=%s' % self.token, data=JSONRenderer().render({
+            'created': datetime.now().isoformat(),
+            'geometry_shape': {'mnemonic': 'circle'},
+            'mood_geometry_shapes': [{'color': -1, 'geometry_shape': {'mnemonic': 'square'}}]
+        }), content_type='application/json')
+        tested_view = MoodViewSet.as_view({'post': 'share_mood'})
+        response = tested_view(request)
+        self.assertEqual(response.status_code, 200,
+                         msg=f'Output is: {response}')
+        output_json = response.data
+        self.assertIsNotNone(output_json)
+
+    def test_get_history(self):
+        """Creating a Geometry object"""
+        request = APIRequestFactory().get('?', data={'token': self.token})
+        tested_view = MoodViewSet.as_view({'get': 'get_history'})
+        response = tested_view(request)
+        self.assertEqual(response.status_code, 200,
+                         msg=f'Output is: {response}')
+        output_json = response.data
+        self.assertIsNotNone(output_json)
+
+    def test_get_shared_moods(self):
+        """Creating a Geometry object"""
+        request = APIRequestFactory().get('?', data={'token': self.token})
+        tested_view = MoodViewSet.as_view({'get': 'get_shared_moods'})
+        response = tested_view(request)
+        self.assertEqual(response.status_code, 200,
+                         msg=f'Output is: {response}')
+        output_json = response.data
+        self.assertIsNotNone(output_json)
