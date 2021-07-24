@@ -38,7 +38,7 @@ class HealthCheckViewSetTest(TestCase):
         ).save()
 
     def test_health(self):
-        """Request all geometry shapes"""
+        """/api/Geometry"""
         request = APIRequestFactory().get('')
         tested_view = HealthCheckViewSet.as_view({'get': 'list'})
         response = tested_view(request)

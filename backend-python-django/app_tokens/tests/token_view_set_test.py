@@ -30,7 +30,7 @@ class TokenViewSetTest(TestCase):
         pass
 
     def test_request_token(self):
-        """Request new token"""
+        """/api/Token"""
         request = APIRequestFactory().get(
             '?', data={'user-agent-hash': -1, 'seed': 0})
         tested_view = TokenViewSet.as_view({'get': 'list'})
@@ -41,7 +41,7 @@ class TokenViewSetTest(TestCase):
         return token
 
     def test_token_validation(self):
-        """Token validation"""
+        """/api/Token/Validation"""
         token = self.test_request_token()
         request = APIRequestFactory().get('?', data={'token': token})
         tested_view = TokenViewSet.as_view({'get': 'validation'})
