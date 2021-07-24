@@ -14,8 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http:#www.gnu.org/licenses/>.
 
+from collections.abc import Iterable, Mapping
+
 from app_moods.models import GeometryShape
+from app_moods.views.health_check_view_set import HealthCheckViewSet
 from django.test import TestCase
+from rest_framework.test import APIRequestFactory
 
 
 class HealthCheckViewSetTest(TestCase):
@@ -23,13 +27,27 @@ class HealthCheckViewSetTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         """Quickly set up data for the whole TestCase"""
-        pass
-
-    def test_create_models(self):
-        """Creating a Geometry object"""
-        # In test methods, use the variables created above
-        triangle_shape = GeometryShape.objects.create(
+        GeometryShape(
             mnemonic='triangle',
-        )
-        #another_model = AnotherModel.objects.get(my_model=test_object)
-        self.assertEqual(triangle_shape.mnemonic, 'triangle')
+        ).save()
+        GeometryShape(
+            mnemonic='square',
+        ).save()
+        GeometryShape(
+            mnemonic='circle',
+        ).save()
+
+    def test_health(self):
+        """Request all geometry shapes"""
+        request = APIRequestFactory().get('')
+        tested_view = HealthCheckViewSet.as_view({'get': 'list'})
+        response = tested_view(request)
+        output_json = response.data
+        self.assertTrue(isinstance(output_json, Iterable))
+        for shape_mnemonic in output_json:
+            self.assertIsNotNone(shape_mnemonic)
+            self.assertTrue(isinstance(shape_mnemonic, str))
+        result = set(output_json)
+        self.assertTrue('triangle' in result)
+        self.assertTrue('square' in result)
+        self.assertTrue('circle' in result)

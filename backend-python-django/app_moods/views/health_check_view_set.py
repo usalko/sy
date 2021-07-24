@@ -44,4 +44,5 @@ class HealthCheckViewSet(mixins.ListModelMixin,
                   'application/json': []
         '''
         response = super().list(request, *args, **kwargs)
+        response.data = [geometry_shape['mnemonic'] for geometry_shape in response.data]
         return response
