@@ -137,7 +137,7 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
         ),
       ];
     } else if (widget.viewModeService.screen == TheScreen.Screen2Triangle) {
-      this.mood = Mood.triangle(this.mood != null ? this.mood!.content : []);
+      this.mood = Mood.triangle(this.mood != null && this.mood?.kind == GeometryShape.Triangle ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Triangle),
@@ -156,7 +156,7 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
         actionsWidget,
       ];
     } else if (widget.viewModeService.screen == TheScreen.Screen2Square) {
-      this.mood = Mood.square(this.mood != null ? this.mood!.content : []);
+      this.mood = Mood.square(this.mood != null && this.mood?.kind == GeometryShape.Square ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Square),
@@ -175,7 +175,7 @@ class _MoodWidgetState extends State<MoodWidget> implements IColorPicker {
         actionsWidget,
       ];
     } else if (widget.viewModeService.screen == TheScreen.Screen2Circle) {
-      this.mood = Mood.circle(this.mood != null ? this.mood!.content : []);
+      this.mood = Mood.circle(this.mood != null && this.mood?.kind == GeometryShape.Circle ? this.mood!.content : []);
       var cardWidth = size.width / 1.9;
       cards = [
         this.colorPicker(context, GeometryShape.Circle),
