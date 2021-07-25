@@ -69,7 +69,9 @@ class _HistoryWidgetState extends State<HistoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return getHistory(context, this.widget.viewModeService.screen);
+    return Container(
+        color: Theme.of(context).canvasColor,
+        child: getHistory(context, this.widget.viewModeService.screen));
   }
 
   Widget getHistory(BuildContext context, TheScreen? screen) {

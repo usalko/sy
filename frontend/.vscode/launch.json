@@ -5,7 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Sy.dart",
+            "name": "Sy.dart + spring",
+            "request": "launch",
+            "type": "dart",
+            //"flutterMode": "debug",
+            "flutterMode": "profile",
+            "args": [
+                "--dart-define", "API_ENDPOINT=http://localhost:8080/api",
+                "-d", "chrome", "--web-hostname", "localhost", "--web-port", "43433"
+            ],
+        },
+        {
+            "name": "Sy.dart + django",
             "request": "launch",
             "type": "dart",
             //"flutterMode": "debug",
