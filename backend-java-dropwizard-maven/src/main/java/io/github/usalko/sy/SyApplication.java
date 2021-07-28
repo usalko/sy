@@ -27,6 +27,9 @@ import io.dropwizard.setup.Environment;
 import io.github.usalko.sy.db.GeometryShapeDao;
 import io.github.usalko.sy.db.MoodDao;
 import io.github.usalko.sy.db.TokenDao;
+import io.github.usalko.sy.exception.GenericExceptionMapper;
+import io.github.usalko.sy.filter.BackendPlatformIdentityFilter;
+import io.github.usalko.sy.filter.CorsFilter;
 import io.github.usalko.sy.health.NoopHealthCheck;
 import io.github.usalko.sy.resources.GeometryResource;
 import io.github.usalko.sy.resources.MoodResource;
@@ -67,16 +70,23 @@ public class SyApplication extends Application<SyConfiguration> {
 
     @Override
     public void run(SyConfiguration configuration, Environment environment) {
+
         final JdbiFactory factory = new JdbiFactory();
         final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(),
                 "database");
         jdbi.installPlugin(new SqlObjectPlugin());
 
         environment.healthChecks().register("noop-health-check", new NoopHealthCheck());
+        environment.jersey().register(GenericExceptionMapper.class);
+        environment.jersey().register(BackendPlatformIdentityFilter.class);
+        if (configuration.isDebugMode()) {
+            environment.jersey().register(CorsFilter.class);
+        }
         environment.jersey().register(new GeometryResource(jdbi.onDemand(GeometryShapeDao.class)));
         environment.jersey().register(new TokenResource(jdbi.onDemand(TokenDao.class)));
         environment.jersey().register(new MoodResource(
                 jdbi.onDemand(TokenDao.class),
-                jdbi.onDemand(MoodDao.class)));
+                jdbi.onDemand(MoodDao.class),
+                jdbi.onDemand(GeometryShapeDao.class)));
     }
 }

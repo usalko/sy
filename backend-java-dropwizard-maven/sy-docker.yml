@@ -20,6 +20,8 @@ server:
   rootPath: /api/*
   type: default
 
+  registerDefaultExceptionMappers: false
+
 # Logging settings.
 logging:
   # Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.

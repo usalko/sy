@@ -1,3 +1,5 @@
+debugMode: true
+
 # Database settings.
 database:
   driverClass: org.sqlite.JDBC
@@ -19,6 +21,8 @@ server:
       type: http
   rootPath: /api/*
   type: default
+
+  registerDefaultExceptionMappers: false
 
 # Logging settings.
 logging:

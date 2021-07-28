@@ -21,7 +21,7 @@ public class GeometryResource {
 
     @GET
     public List<String> list() {
-        return geometryShapeDao.findAll();
+        return geometryShapeDao.findAllMnemonics();
     }
 
 }

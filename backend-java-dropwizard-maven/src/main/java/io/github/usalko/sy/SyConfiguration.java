@@ -23,10 +23,20 @@ import javax.validation.constraints.NotNull;
 
 public class SyConfiguration extends Configuration {
 
+    private boolean debugMode;
     @Valid
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
 
+    @JsonProperty
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    @JsonProperty
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
 
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
