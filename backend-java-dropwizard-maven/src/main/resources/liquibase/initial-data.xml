@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+
+  <changeSet author="i.usalko" id="202107280830-1">
+    <comment>
+      Initial geometry shapes
+    </comment>
+    <insert tableName="geometry_shapes">
+      <column name="mnemonic">triangle</column>
+    </insert>
+    <insert tableName="geometry_shapes">
+      <column name="mnemonic">square</column>
+    </insert>
+    <insert tableName="geometry_shapes">
+      <column name="mnemonic">circle</column>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

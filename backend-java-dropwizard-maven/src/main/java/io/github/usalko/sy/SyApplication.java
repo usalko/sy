@@ -24,6 +24,7 @@ import io.dropwizard.jdbi3.bundles.JdbiExceptionsBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.github.usalko.sy.db.GeometryShapeDao;
 import io.github.usalko.sy.health.NoopHealthCheck;
 import io.github.usalko.sy.resources.GeometryResource;
 import org.jdbi.v3.core.Jdbi;
@@ -62,12 +63,12 @@ public class SyApplication extends Application<SyConfiguration> {
 
     @Override
     public void run(SyConfiguration configuration, Environment environment) {
-//        final JdbiFactory factory = new JdbiFactory();
-//        final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(),
-//                "postgresql");
-//        jdbi.installPlugin(new SqlObjectPlugin());
-        //environment.jersey().register(new UserResource(jdbi));
+        final JdbiFactory factory = new JdbiFactory();
+        final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(),
+                "database");
+        jdbi.installPlugin(new SqlObjectPlugin());
+
         environment.healthChecks().register("noop-health-check", new NoopHealthCheck());
-        environment.jersey().register(new GeometryResource());
+        environment.jersey().register(new GeometryResource(jdbi.onDemand(GeometryShapeDao.class)));
     }
 }
