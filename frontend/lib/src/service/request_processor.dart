@@ -51,6 +51,13 @@ class RequestProcessor {
           body: jsonEncode(processMoodForDjangoPlatform(body)),
           encoding: encoding);
     }
+    if (body is Mood && backendPlatformIdentity == BackendPlatformIdentity.Dropwizard) {
+      requestHeaders['pragma'] = 'Backend-Platform-Identity=Dropwizard;';
+      return this.client.post(url,
+          headers: requestHeaders,
+          body: jsonEncode(processMoodForDropwizardPlatform(body)),
+          encoding: encoding);
+    }
     return this
         .client
         .post(url, headers: requestHeaders, body: body, encoding: encoding);
@@ -99,5 +106,28 @@ class RequestProcessor {
     result['color'] = geometry.color.toSigned(32);
     return result;
   }
+
+  Map<String, dynamic> processMoodForDropwizardPlatform(Mood mood) {
+    var result = Map<String, dynamic>();
+    result['id'] = int.tryParse(mood.id);
+    result['created'] = mood.created;
+    result['shape'] = {'mnemonic': GeometryShapeExt.toJson(mood.kind)};
+    result['content'] =
+        mood.content.map((e) => processGeometryForDropwizardPlatform(e)).toList();
+    return result;
+  }
+
+  Map<String, dynamic>? processGeometryForDropwizardPlatform(Geometry? geometry) {
+    if (geometry == null) {
+      return null;
+    }
+    var result = Map<String, dynamic>();
+    result['shape'] = {
+      'mnemonic': GeometryShapeExt.toJson(geometry.shape)
+    };
+    result['color'] = geometry.color.toSigned(32);
+    return result;
+  }
+
 
 }

@@ -1,0 +1,118 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+
+  <changeSet author="i.usalko" id="202107280638-1">
+    <comment>
+      Create table geometry_shapes
+    </comment>
+    <createTable tableName="geometry_shapes">
+      <column name="id" type="INTEGER" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="mnemonic" type="VARCHAR(63)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createIndex indexName="geometry_shapes_mnemonic" tableName="geometry_shapes"
+      unique="true">
+      <column name="mnemonic"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="i.usalko" id="202107280638-2">
+    <comment>
+      Create table own_moods
+    </comment>
+    <createTable tableName="own_moods">
+      <column name="id" type="INTEGER" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="created" type="TEXT"/>
+      <column name="geometry_shape_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="i.usalko" id="202107280638-3">
+    <comment>
+      Create table shared_moods
+    </comment>
+    <createTable tableName="shared_moods">
+      <column name="id" type="INTEGER" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="created" type="TEXT"/>
+      <column name="geometry_shape_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="i.usalko" id="202107280638-4">
+    <comment>
+      Create table tokens
+    </comment>
+    <createTable tableName="tokens">
+      <column name="id" type="VARCHAR(36)">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="created" type="TEXT"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="i.usalko" id="202107280638-5">
+    <comment>
+      Create table own_mood_geometry_shapes
+    </comment>
+    <sql><![CDATA[
+      CREATE TABLE own_mood_geometry_shapes (
+        index_in_list INTEGER NOT NULL,
+        color INTEGER NOT NULL,
+        own_mood_id INTEGER NOT NULL,
+        geometry_shape_id INTEGER NOT NULL,
+        PRIMARY KEY(geometry_shape_id, index_in_list, own_mood_id),
+        FOREIGN KEY(own_mood_id) REFERENCES own_moods(id),
+        FOREIGN KEY(geometry_shape_id) REFERENCES geometry_shapes(id)
+      )
+    ]]></sql>
+  </changeSet>
+
+
+  <changeSet author="i.usalko" id="202107280638-6">
+    <comment>
+      Create table shared_mood_geometry_shapes
+    </comment>
+    <sql><![CDATA[
+      CREATE TABLE shared_mood_geometry_shapes (
+        index_in_list INTEGER NOT NULL,
+        color INTEGER NOT NULL,
+        shared_mood_id INTEGER NOT NULL,
+        geometry_shape_id INTEGER NOT NULL,
+        PRIMARY KEY(geometry_shape_id, index_in_list, shared_mood_id),
+        FOREIGN KEY(shared_mood_id) REFERENCES shared_moods(id),
+        FOREIGN KEY(geometry_shape_id) REFERENCES geometry_shapes(id)
+      )
+    ]]></sql>
+  </changeSet>
+
+
+  <changeSet author="i.usalko" id="202107280638-7">
+    <comment>
+      token_own_moods
+    </comment>
+    <sql><![CDATA[
+      CREATE TABLE token_own_moods (
+        token_id VARCHAR(36) NOT NULL,
+        own_mood_id INTEGER NOT NULL,
+        PRIMARY KEY(token_id, own_mood_id)
+        FOREIGN KEY(token_id) REFERENCES tokens(id),
+        FOREIGN KEY(own_mood_id) REFERENCES own_moods(id)
+      )
+    ]]></sql>
+  </changeSet>
+
+</databaseChangeLog>

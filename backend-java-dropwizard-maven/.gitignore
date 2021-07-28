@@ -1,0 +1,11 @@
+# Maven snots
+target
+
+# Java compiler stuff
+*.class
+
+# Local database
+*.sqlite3
+
+# The build preprocess artifacts
+dependency-reduced-pom.xml

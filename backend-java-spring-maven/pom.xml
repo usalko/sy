@@ -11,8 +11,8 @@
     <groupId>io.github.usalko</groupId>
     <artifactId>sy</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Share your mood</name>
-    <description>Demo project</description>
+    <name>Sy</name>
+    <description>Sy (Share your mood with anyone)</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>

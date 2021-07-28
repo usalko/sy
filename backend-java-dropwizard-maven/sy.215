@@ -1,0 +1,40 @@
+debugMode: false
+
+# Database settings.
+database:
+  driverClass: org.sqlite.JDBC
+  user: sa
+  password: sa
+  url: jdbc:sqlite:db.sqlite3
+
+# Http server settings
+server:
+  applicationConnectors:
+    -
+      port: 8080
+      type: http
+  rootPath: /api/*
+  type: default
+
+  registerDefaultExceptionMappers: false
+
+# Logging settings.
+logging:
+  # Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+  loggers:
+    io.github.usalko.sy: ERROR
+
+  # Logback's Time Based Rolling Policy - archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}.log.gz
+  # Logback's Size and Time Based Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
+  # Logback's Fixed Window Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%i.log.gz
+  appenders:
+    - type: console
+    - type: file
+      threshold: ERROR
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: /tmp/application.log
+      archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 7
+      timeZone: UTC
+      maxFileSize: 10MiB

@@ -38,6 +38,12 @@ class ResponseProcessor {
             .map((e) => Mood.fromJson(processMoodForDjangoPlatform(e)))
             .toList();
       }
+      if ((response.headers['pragma'] ?? '')
+          .contains('Backend-Platform-Identity=Dropwizard')) {
+        return processResponseForDropwizardPlatform(response.body)
+            .map((e) => Mood.fromJson(processMoodForDropwizardPlatform(e)))
+            .toList();
+      }
       return (jsonDecode(response.body) as List<dynamic>)
           .map((e) => Mood.fromJson(e))
           .toList();
@@ -110,6 +116,47 @@ class ResponseProcessor {
   }
 
   List<dynamic> processResponseForDjangoPlatform(String body) {
+    var jsonedResponse = jsonDecode(response.body);
+    // Detect pagination
+    if (jsonedResponse is Map && jsonedResponse['content'] is List) {
+      return jsonedResponse['content'];
+    }
+    // Detect array
+    if (jsonedResponse is List) {
+      return jsonedResponse;
+    }
+    throw UnimplementedError();
+  }
+
+  Map<String, dynamic> processMoodForDropwizardPlatform(
+      Map<String, dynamic> element) {
+    print('Mood is $element');
+    var result = Map<String, dynamic>();
+    result['id'] = "${element['id']}";
+    result['created'] = element['created'];
+    result['kind'] = element['shape']?['mnemonic'];
+    result['content'] = element['content']
+        ?.map(
+          (e) => processGeometryForDropwizardPlatform(e),
+        )
+        .toList();
+    return result;
+  }
+
+  Map<String, dynamic>? processGeometryForDropwizardPlatform(
+      Map<String, dynamic>? element) {
+    if (element == null) {
+      return null;
+    }
+    print('Element is $element');
+    var result = Map<String, dynamic>();
+    result['shape'] = element['shape']?['mnemonic'];
+    result['color'] = (element['color'] as int).toUnsigned(32);
+    return result;
+  }
+
+  List<dynamic> processResponseForDropwizardPlatform(String body) {
+    print('Body is $body');
     var jsonedResponse = jsonDecode(response.body);
     // Detect pagination
     if (jsonedResponse is Map && jsonedResponse['content'] is List) {
