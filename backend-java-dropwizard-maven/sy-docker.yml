@@ -3,7 +3,7 @@ database:
   driverClass: org.sqlite.JDBC
   user: sa
   password: sa
-  url: jdbc:sqlite:db.sqlite3
+  url: jdbc:sqlite:~/db.sqlite3
 
 # Http server settings
 server:

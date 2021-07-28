@@ -19,11 +19,15 @@ import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.jdbi3.JdbiFactory;
+import io.dropwizard.jdbi3.bundles.JdbiExceptionsBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.github.usalko.sy.health.NoopHealthCheck;
 import io.github.usalko.sy.resources.GeometryResource;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 public class SyApplication extends Application<SyConfiguration> {
 
@@ -45,33 +49,25 @@ public class SyApplication extends Application<SyConfiguration> {
                         new EnvironmentVariableSubstitutor(false)
                 )
         );
-
+        // Enable liquibase mesh
         bootstrap.addBundle(new MigrationsBundle<SyConfiguration>() {
             @Override
             public DataSourceFactory getDataSourceFactory(SyConfiguration configuration) {
                 return configuration.getDataSourceFactory();
             }
         });
+        // Enable processing JDBi exceptions
+        bootstrap.addBundle(new JdbiExceptionsBundle());
     }
 
     @Override
     public void run(SyConfiguration configuration, Environment environment) {
-        //final JdbiFactory factory = new JdbiFactory();
-        //final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(),
-        //        "postgresql");
-        //jdbi.installPlugin(new SqlObjectPlugin());
+//        final JdbiFactory factory = new JdbiFactory();
+//        final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(),
+//                "postgresql");
+//        jdbi.installPlugin(new SqlObjectPlugin());
         //environment.jersey().register(new UserResource(jdbi));
         environment.healthChecks().register("noop-health-check", new NoopHealthCheck());
         environment.jersey().register(new GeometryResource());
     }
-
-//    @Bean
-//    CommandLineRunner runner(GeometryShapeService geometryShapeService) {
-//        return args -> {
-//            // Geometric shapes
-//            geometryShapeService.save(new GeometryShape(1L, "triangle"));
-//            geometryShapeService.save(new GeometryShape(2L, "square"));
-//            geometryShapeService.save(new GeometryShape(3L, "circle"));
-//        };
-//    }
 }
