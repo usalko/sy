@@ -1,11 +1,17 @@
 package io.github.usalko.sy.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class GeometryShape {
 
-    @JsonProperty("mnemonic")
-    public final String mnemonic;
+    private long id;
+
+    private String mnemonic;
 
     public GeometryShape(String mnemonic) {
         this.mnemonic = mnemonic;
