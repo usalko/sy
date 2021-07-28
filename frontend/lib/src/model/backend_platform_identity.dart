@@ -17,16 +17,19 @@
 enum BackendPlatformIdentity {
   Spring,
   Django,
+  Dropwizard,
 }
 
 extension BackendPlatformIdentityExt on BackendPlatformIdentity {
   static const Map<BackendPlatformIdentity, String> keys = {
     BackendPlatformIdentity.Spring: 'backend-platform-identity=spring',
     BackendPlatformIdentity.Django: 'backend-platform-identity=djano',
+    BackendPlatformIdentity.Dropwizard: 'backend-platform-identity=dropwizard',
   };
   static const Map<String, BackendPlatformIdentity> values = {
     'backend-platform-identity=spring': BackendPlatformIdentity.Spring,
     'backend-platform-identity=django': BackendPlatformIdentity.Django,
+    'backend-platform-identity=dropwizard': BackendPlatformIdentity.Dropwizard,
   };
 
   String? get key => keys[this];
