@@ -1,20 +1,14 @@
-debugMode: true
+debugMode: false
 
 # Database settings.
 database:
   driverClass: org.sqlite.JDBC
   user: sa
   password: sa
-  url: jdbc:sqlite:/home/dropwizard/db.sqlite3
+  url: jdbc:sqlite:db.sqlite3
 
 # Http server settings
 server:
-  adminConnectors:
-    -
-      port: 8081
-      type: http
-  adminContextPath: /admin
-
   applicationConnectors:
     -
       port: 8080
@@ -29,7 +23,7 @@ logging:
   # Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
   loggers:
-    io.github.usalko.sy: DEBUG
+    io.github.usalko.sy: ERROR
 
   # Logback's Time Based Rolling Policy - archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}.log.gz
   # Logback's Size and Time Based Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
@@ -37,7 +31,7 @@ logging:
   appenders:
     - type: console
     - type: file
-      threshold: INFO
+      threshold: ERROR
       logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
       currentLogFilename: /tmp/application.log
       archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz

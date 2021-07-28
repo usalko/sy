@@ -5,11 +5,11 @@ RUN apk add --no-cache openjdk8
 RUN apk add --no-cache sqlite
 
 COPY ./target/web/ /usr/share/nginx/html/
-COPY ./nginx.212 /etc/nginx/conf.d/default.conf
+COPY ./nginx.215 /etc/nginx/conf.d/default.conf
 
-ARG JAR_FILE=target/${project.artifactId}-${project.version}.jar
+ARG JAR_FILE=target/sy-1.0.0-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
-COPY sy-docker.yml sy.yml
+COPY sy.215 sy.yml
 RUN java -jar /app.jar db migrate sy.yml
 EXPOSE 80
 CMD nginx && java -jar /app.jar server sy.yml

@@ -134,10 +134,10 @@ class ResponseProcessor {
     var result = Map<String, dynamic>();
     result['id'] = "${element['id']}";
     result['created'] = element['created'];
-    result['kind'] = element['geometry_shape']?['mnemonic'];
-    result['content'] = element['mood_geometry_shapes']
+    result['kind'] = element['shape']?['mnemonic'];
+    result['content'] = element['content']
         ?.map(
-          (e) => processGeometryForDjangoPlatform(e),
+          (e) => processGeometryForDropwizardPlatform(e),
         )
         .toList();
     return result;
@@ -150,7 +150,7 @@ class ResponseProcessor {
     }
     print('Element is $element');
     var result = Map<String, dynamic>();
-    result['shape'] = element['snape']?['mnemonic'];
+    result['shape'] = element['shape']?['mnemonic'];
     result['color'] = (element['color'] as int).toUnsigned(32);
     return result;
   }
