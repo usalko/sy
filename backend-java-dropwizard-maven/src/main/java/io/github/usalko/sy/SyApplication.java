@@ -25,9 +25,11 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.github.usalko.sy.db.GeometryShapeDao;
+import io.github.usalko.sy.db.MoodDao;
 import io.github.usalko.sy.db.TokenDao;
 import io.github.usalko.sy.health.NoopHealthCheck;
 import io.github.usalko.sy.resources.GeometryResource;
+import io.github.usalko.sy.resources.MoodResource;
 import io.github.usalko.sy.resources.TokenResource;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
@@ -73,5 +75,8 @@ public class SyApplication extends Application<SyConfiguration> {
         environment.healthChecks().register("noop-health-check", new NoopHealthCheck());
         environment.jersey().register(new GeometryResource(jdbi.onDemand(GeometryShapeDao.class)));
         environment.jersey().register(new TokenResource(jdbi.onDemand(TokenDao.class)));
+        environment.jersey().register(new MoodResource(
+                jdbi.onDemand(TokenDao.class),
+                jdbi.onDemand(MoodDao.class)));
     }
 }
