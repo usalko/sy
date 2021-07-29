@@ -8,6 +8,7 @@ Share your mood with anyone
 |------|-----------------------|-----------
 |backend-java-spring-maven|Java language (Java 8 SE)|[iusalko/demo212](https://hub.docker.com/r/iusalko/demo212)
 |backend-python-django|Python language (Python 3.7)|[iusalko/demo213](https://hub.docker.com/r/iusalko/demo213)
+|backend-java-dropwizard-maven|Java language (Java 11 SE)|[iusalko/demo215](https://hub.docker.com/r/iusalko/demo215)
 
 # The idea pretty simple
 

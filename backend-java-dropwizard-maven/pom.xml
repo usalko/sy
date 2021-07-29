@@ -125,6 +125,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.glassfish.jersey.test-framework.providers</groupId>
       <artifactId>jersey-test-framework-provider-inmemory</artifactId>
       <scope>test</scope>
