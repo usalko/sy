@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM openjdk:8-jdk-alpine
+FROM alpine
+RUN apk add openjdk11-jre
 RUN apk add --no-cache sqlite
 RUN addgroup -S dropwizard && adduser -S dropwizard -G dropwizard
 USER dropwizard:dropwizard

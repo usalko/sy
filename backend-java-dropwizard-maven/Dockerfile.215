@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM nginx:alpine
 
-RUN apk add --no-cache openjdk8
+RUN apk add --no-cache openjdk11-jre
 RUN apk add --no-cache sqlite
 
 COPY ./target/web/ /usr/share/nginx/html/
