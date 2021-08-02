@@ -25,3 +25,6 @@ Every shape is filled with color.
 The result is your mood.
 
 And you could share it with anyone.
+
+# The database schema
+![Database schema](./db-schema.png)
