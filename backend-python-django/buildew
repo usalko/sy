@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PYTHON=python3.7m
+PYTHON=python3
 # CHECK PYTHON 3
 if command -v $PYTHON &>/dev/null; then
     echo Python3 available
