@@ -20,7 +20,7 @@ Only three shapes are available:
  2. Square
  3. Circle
 
-Every shape is filled with color.
+Every shape is filling with color.
 
 The result is your mood.
 
